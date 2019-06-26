@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="网络,">
+  <meta name="keywords" content="网络 HTTP,">
 
 
 
@@ -79,20 +79,22 @@
 
 
 
-<meta name="description" content="OSI的七层协议体系结构，概念清楚，理论比较完整，但是复杂不实用；TCP/IP四层体系结构得到广泛的使用；但是在学习计算机网络原理的时，往往将两者结合，使用五层协议的体系结构。  （1）应用层应用层的任务是通过应用进程间的交互来完成特定的网络应用。 应用层协议定义的是应用进程间通信和交互的规则。常见的应用层协议有：DNS、HTTP、SMTP。应用层交互的数据单元称为报文。 （2）传输层传输层的任务">
-<meta name="keywords" content="网络">
+<meta name="description" content="1    http请求报文和响应报文​    （1）http请求报文由请求行、请求头部、空行、请求数据组成。 ​    请求行：（请求方法，url中的path路径，http版本） ​    请求头部（header）：关键字/值对组成  ​    （2）http响应报文由状态行、响应头部、空行、响应数据组成。 ​    状态行：（http版本，状态码，状态码描述） ​    响应头部（header）">
+<meta name="keywords" content="网络 HTTP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络1 计算机网络体系">
-<meta property="og:url" content="http://yoursite.com/2019/06/24/网络1 计算机网络体系/index.html">
+<meta property="og:title" content="网络2 HTTP">
+<meta property="og:url" content="http://yoursite.com/2019/06/26/网络2-HTTP/index.html">
 <meta property="og:site_name" content="海阔天空的博客">
-<meta property="og:description" content="OSI的七层协议体系结构，概念清楚，理论比较完整，但是复杂不实用；TCP/IP四层体系结构得到广泛的使用；但是在学习计算机网络原理的时，往往将两者结合，使用五层协议的体系结构。  （1）应用层应用层的任务是通过应用进程间的交互来完成特定的网络应用。 应用层协议定义的是应用进程间通信和交互的规则。常见的应用层协议有：DNS、HTTP、SMTP。应用层交互的数据单元称为报文。 （2）传输层传输层的任务">
+<meta property="og:description" content="1    http请求报文和响应报文​    （1）http请求报文由请求行、请求头部、空行、请求数据组成。 ​    请求行：（请求方法，url中的path路径，http版本） ​    请求头部（header）：关键字/值对组成  ​    （2）http响应报文由状态行、响应头部、空行、响应数据组成。 ​    状态行：（http版本，状态码，状态码描述） ​    响应头部（header）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/2019-06-24-1.png">
-<meta property="og:updated_time" content="2019-06-24T10:02:10.664Z">
+<meta property="og:image" content="http://yoursite.com/images/http-1.png">
+<meta property="og:image" content="http://yoursite.com/images/http-2.png">
+<meta property="og:image" content="http://yoursite.com/images/http-3.png">
+<meta property="og:updated_time" content="2019-06-26T10:23:39.279Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="网络1 计算机网络体系">
-<meta name="twitter:description" content="OSI的七层协议体系结构，概念清楚，理论比较完整，但是复杂不实用；TCP/IP四层体系结构得到广泛的使用；但是在学习计算机网络原理的时，往往将两者结合，使用五层协议的体系结构。  （1）应用层应用层的任务是通过应用进程间的交互来完成特定的网络应用。 应用层协议定义的是应用进程间通信和交互的规则。常见的应用层协议有：DNS、HTTP、SMTP。应用层交互的数据单元称为报文。 （2）传输层传输层的任务">
-<meta name="twitter:image" content="http://yoursite.com/images/2019-06-24-1.png">
+<meta name="twitter:title" content="网络2 HTTP">
+<meta name="twitter:description" content="1    http请求报文和响应报文​    （1）http请求报文由请求行、请求头部、空行、请求数据组成。 ​    请求行：（请求方法，url中的path路径，http版本） ​    请求头部（header）：关键字/值对组成  ​    （2）http响应报文由状态行、响应头部、空行、响应数据组成。 ​    状态行：（http版本，状态码，状态码描述） ​    响应头部（header）">
+<meta name="twitter:image" content="http://yoursite.com/images/http-1.png">
 
 
 
@@ -122,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/06/24/网络1 计算机网络体系/">
+  <link rel="canonical" href="http://yoursite.com/2019/06/26/网络2-HTTP/">
 
 
 
 
 
-  <title>网络1 计算机网络体系 | 海阔天空的博客</title>
+  <title>网络2 HTTP | 海阔天空的博客</title>
   
 
 
@@ -265,7 +267,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/24/网络1 计算机网络体系/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/26/网络2-HTTP/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yu Meng">
@@ -282,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">网络1 计算机网络体系</h1>
+          <h1 class="post-title" itemprop="name headline">网络2 HTTP</h1>
         
 
         <div class="post-meta">
@@ -294,8 +296,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-24T17:52:59+08:00">
-                2019-06-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-26T18:16:53+08:00">
+                2019-06-26
               </time>
             
 
@@ -332,16 +334,44 @@
       
 
       
-        <p>OSI的七层协议体系结构，概念清楚，理论比较完整，但是复杂不实用；TCP/IP四层体系结构得到广泛的使用；但是在学习计算机网络原理的时，往往将两者结合，使用五层协议的体系结构。</p>
-<p><img src="/images/2019-06-24-1.png" alt></p>
-<h2 id="（1）应用层"><a href="#（1）应用层" class="headerlink" title="（1）应用层"></a>（1）应用层</h2><p>应用层的任务是<strong>通过应用进程间的交互来完成特定的网络应用</strong>。 应用层协议定义的是应用进程间通信和交互的规则。常见的应用层协议有：DNS、HTTP、SMTP。应用层交互的数据单元称为<strong>报文</strong>。</p>
-<h2 id="（2）传输层"><a href="#（2）传输层" class="headerlink" title="（2）传输层"></a>（2）传输层</h2><p>传输层的任务是<strong>负责向两台主机中进程之间的通信提供通用的数据传输服务</strong>。应用进程利用该服务传送应用层报文。“通用的”指多种应用可以使用同一个传输层服务。传输层有<strong>复用</strong>和<strong>分用</strong>的功能。复用指多个应用层进程可以同时使用传输层的服务；分用指传输层把收到的信息分别交付应用层中的相应进程。常见的传输层协议有：TCP、UDP。</p>
-<p>TCP（传输控制协议）：<strong>提供面向连接的、可靠的数据传输服务</strong>。数据传输的单位是<strong>报文段</strong>。</p>
-<p>UDP（用户数据报协议）：<strong>提供无连接的、尽最大努力的数据传输服务</strong>。数据传输的单位是<strong>用户数据报</strong>。</p>
-<h2 id="（3）网络层"><a href="#（3）网络层" class="headerlink" title="（3）网络层"></a>（3）网络层</h2><p>网络层的任务（1）<strong>负责为分组交换网上的不同主机提供通信服务</strong>；（2）<strong>选择合适的路由，使源主机传输层传下来的分组，能够通过网络中的路由器找到目的主机</strong>。网络层传输的数据单元为<strong>分组或包</strong>。常见的网络层传输协议IP协议。</p>
-<h2 id="（4）数据链路层"><a href="#（4）数据链路层" class="headerlink" title="（4）数据链路层"></a>（4）数据链路层</h2><p>数据链路层的任务是在两个相邻节点间传输数据时，将网络层的IP数据报组装成<strong>帧</strong>，在两个节点间的链路上传送帧。每一帧包括数据和必要的控制信息（如同步信息、地址信息、差错控制）。链路层传输的单位是<strong>帧</strong>。</p>
-<h2 id="（5）物理层"><a href="#（5）物理层" class="headerlink" title="（5）物理层"></a>（5）物理层</h2><p>物理层的任务是在连接各种计算机的传输媒体上传输数据比特流。物理层传输的单位是<strong>比特</strong>。</p>
-
+        <h2 id="1-http请求报文和响应报文"><a href="#1-http请求报文和响应报文" class="headerlink" title="1    http请求报文和响应报文"></a>1    http请求报文和响应报文</h2><p>​    （1）http请求报文由请求行、请求头部、空行、请求数据组成。</p>
+<p>​    请求行：（请求方法，url中的path路径，http版本）</p>
+<p>​    请求头部（header）：关键字/值对组成</p>
+<p><img src="/images/http-1.png" alt></p>
+<p>​    （2）http响应报文由状态行、响应头部、空行、响应数据组成。</p>
+<p>​    状态行：（http版本，状态码，状态码描述）</p>
+<p>​    响应头部（header）：关键字/值对组成</p>
+<p><img src="/images/http-2.png" alt></p>
+<h2 id="2-http请求方法"><a href="#2-http请求方法" class="headerlink" title="2    http请求方法"></a>2    http请求方法</h2><p>GET：获取资源。请求访问已被URI识别的资源。</p>
+<p>POST：传输实体主体。</p>
+<p>PUT：传输文件。</p>
+<p>HEAD：获得报文的首部。与GET一样，但是不返回报文主体。</p>
+<p>DELETE：删除文件。与PUT相反。PUT和DELETE方法本身不带有验证机          制，所以一般的网站不使用这两种方法。</p>
+<p>OPTIONS：询问支持的方法。</p>
+<p>TRACE：追踪路径。</p>
+<h2 id="3-Get和Post区别"><a href="#3-Get和Post区别" class="headerlink" title="3    Get和Post区别"></a>3    Get和Post区别</h2><p><strong>语义区别</strong>：</p>
+<p>get获取数据，post提交数据。</p>
+<p><strong>规范</strong>：</p>
+<p>（1）get把参数写在url中，post通过请求体传参。实际上，http协议没有要求，HTML中有类似的定义，所以后来浏览器实现了。</p>
+<p>（2）get请求url中传递的参数长度有限制，post没有。实际上，http协议没有要求，主要出于浏览器和服务器的性能方面的考虑。</p>
+<p>（3）安全性。</p>
+<p><strong>区别（http协议方面）</strong></p>
+<p>（1）安全。是否改变服务器状态。</p>
+<p>（2）幂等性。重复提交是否有意外情况发生。</p>
+<p>（3）缓存。get有缓存，post没有缓存。</p>
+<h2 id="4-http状态码"><a href="#4-http状态码" class="headerlink" title="4    http状态码"></a>4    http状态码</h2><p><img src="/images/http-3.png" alt></p>
+<p><strong>典型的状态码及其语义</strong></p>
+<p><strong>100</strong>        继续请求者应当继续提出请求</p>
+<p><strong>200</strong>        成功。</p>
+<p><strong>201</strong>        已创建。请求成功并且服务器创建了新的资源。</p>
+<p><strong>204</strong>        无内容。服务器对于客户端没有返回新的信息。    </p>
+<p><strong>206</strong>        部分内容。客户端进行了范围请求，服务器成功执行get请求。</p>
+<p><strong>301</strong>        永久移动。</p>
+<p><strong>302</strong>        临时移动。与301的区别，临时性质。例如用户把URI保存书签，301会更新书签，302不会。</p>
+<p><strong>303</strong>        查看其它位置。由于请求位置存放另一个URI，应该使用GET方法定向获取请求资源。</p>
+<p><strong>304</strong>        未修改。</p>
+<p><strong>400</strong>        请求错误。</p>
+<h2 id="5-http版本的区别"><a href="#5-http版本的区别" class="headerlink" title="5    http版本的区别"></a>5    http版本的区别</h2>
       
     </div>
     
@@ -358,7 +388,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/网络/" rel="tag"># 网络</a>
+            <a href="/tags/网络-HTTP/" rel="tag"># 网络 HTTP</a>
           
         </div>
       
@@ -371,8 +401,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/26/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2019/06/24/网络1 计算机网络体系/" rel="next" title="网络1 计算机网络体系">
+                <i class="fa fa-chevron-left"></i> 网络1 计算机网络体系
               </a>
             
           </div>
@@ -380,10 +410,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/06/26/网络2-HTTP/" rel="prev" title="网络2 HTTP">
-                网络2 HTTP <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -522,7 +548,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#（1）应用层"><span class="nav-number">1.</span> <span class="nav-text">（1）应用层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（2）传输层"><span class="nav-number">2.</span> <span class="nav-text">（2）传输层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（3）网络层"><span class="nav-number">3.</span> <span class="nav-text">（3）网络层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（4）数据链路层"><span class="nav-number">4.</span> <span class="nav-text">（4）数据链路层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（5）物理层"><span class="nav-number">5.</span> <span class="nav-text">（5）物理层</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-http请求报文和响应报文"><span class="nav-number">1.</span> <span class="nav-text">1    http请求报文和响应报文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-http请求方法"><span class="nav-number">2.</span> <span class="nav-text">2    http请求方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Get和Post区别"><span class="nav-number">3.</span> <span class="nav-text">3    Get和Post区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-http状态码"><span class="nav-number">4.</span> <span class="nav-text">4    http状态码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-http版本的区别"><span class="nav-number">5.</span> <span class="nav-text">5    http版本的区别</span></a></li></ol></div>
             
 
           </div>
