@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="数据库,事务,">
+  <meta name="keywords" content="数据库,索引,数据结构,">
 
 
 
@@ -79,20 +79,25 @@
 
 
 
-<meta name="description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID） １    原子性：　　原子性是指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样 。 　　实现方式：在发生异常时，对已经执行的操作进行回滚，在MySQL中，通过回滚日志（undo log）实现。所有事务进行的修改都">
-<meta name="keywords" content="数据库,事务">
+<meta name="description" content="为什么要有B树？ 计算机有一个局部性原理，就是说，当一个数据被用到时，其附近的数据也通常会马上被使用。所以当你用红黑树的时候，你一次只能得到一个键值的信息，而用B树，可以得到最多M-1个键值的信息。这样来说B树当然更好了。 另外一方面，同样的数据，红黑树的阶数更大，B树更短，这样查找的时候当然B树更具有优势了，效率也就越高。  一、B树B树的结构要求：　　1）根节点至少有两个子节点 　　2）每个节">
+<meta name="keywords" content="数据库,索引,数据结构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="数据库1 事务">
-<meta property="og:url" content="http://yoursite.com/2019/06/27/数据库1-事务/index.html">
+<meta property="og:title" content="数据库3 索引数据结构">
+<meta property="og:url" content="http://yoursite.com/2019/06/28/数据库3-索引数据结构/index.html">
 <meta property="og:site_name" content="海阔天空的博客">
-<meta property="og:description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID） １    原子性：　　原子性是指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样 。 　　实现方式：在发生异常时，对已经执行的操作进行回滚，在MySQL中，通过回滚日志（undo log）实现。所有事务进行的修改都">
+<meta property="og:description" content="为什么要有B树？ 计算机有一个局部性原理，就是说，当一个数据被用到时，其附近的数据也通常会马上被使用。所以当你用红黑树的时候，你一次只能得到一个键值的信息，而用B树，可以得到最多M-1个键值的信息。这样来说B树当然更好了。 另外一方面，同样的数据，红黑树的阶数更大，B树更短，这样查找的时候当然B树更具有优势了，效率也就越高。  一、B树B树的结构要求：　　1）根节点至少有两个子节点 　　2）每个节">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/事务-1.png">
-<meta property="og:updated_time" content="2019-06-27T10:42:51.350Z">
+<meta property="og:image" content="http://yoursite.com/images/索引数据结构-1.png">
+<meta property="og:image" content="http://yoursite.com/images/索引数据结构-2.png">
+<meta property="og:image" content="http://yoursite.com/images/索引数据结构-3.png">
+<meta property="og:image" content="http://yoursite.com/images/索引数据结构-4.png">
+<meta property="og:image" content="http://yoursite.com/images/索引数据结构-5.png">
+<meta property="og:image" content="http://yoursite.com/images/索引数据结构-6.png">
+<meta property="og:updated_time" content="2019-06-28T00:59:38.948Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="数据库1 事务">
-<meta name="twitter:description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID） １    原子性：　　原子性是指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样 。 　　实现方式：在发生异常时，对已经执行的操作进行回滚，在MySQL中，通过回滚日志（undo log）实现。所有事务进行的修改都">
-<meta name="twitter:image" content="http://yoursite.com/images/事务-1.png">
+<meta name="twitter:title" content="数据库3 索引数据结构">
+<meta name="twitter:description" content="为什么要有B树？ 计算机有一个局部性原理，就是说，当一个数据被用到时，其附近的数据也通常会马上被使用。所以当你用红黑树的时候，你一次只能得到一个键值的信息，而用B树，可以得到最多M-1个键值的信息。这样来说B树当然更好了。 另外一方面，同样的数据，红黑树的阶数更大，B树更短，这样查找的时候当然B树更具有优势了，效率也就越高。  一、B树B树的结构要求：　　1）根节点至少有两个子节点 　　2）每个节">
+<meta name="twitter:image" content="http://yoursite.com/images/索引数据结构-1.png">
 
 
 
@@ -122,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/06/27/数据库1-事务/">
+  <link rel="canonical" href="http://yoursite.com/2019/06/28/数据库3-索引数据结构/">
 
 
 
 
 
-  <title>数据库1 事务 | 海阔天空的博客</title>
+  <title>数据库3 索引数据结构 | 海阔天空的博客</title>
   
 
 
@@ -265,7 +270,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/27/数据库1-事务/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/28/数据库3-索引数据结构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yu Meng">
@@ -282,7 +287,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">数据库1 事务</h1>
+          <h1 class="post-title" itemprop="name headline">数据库3 索引数据结构</h1>
         
 
         <div class="post-meta">
@@ -294,8 +299,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-27T18:32:07+08:00">
-                2019-06-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-28T08:45:47+08:00">
+                2019-06-28
               </time>
             
 
@@ -332,37 +337,33 @@
       
 
       
-        <p>事务的<strong>基本特性</strong>原子性、一致性、隔离性、持久性。（ACID）</p>
-<h2 id="１-原子性："><a href="#１-原子性：" class="headerlink" title="１    原子性："></a>１    <strong>原子性</strong>：</h2><p>　　原子性是指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样 。</p>
-<p>　　实现方式：在发生异常时，对已经执行的操作进行回滚，在MySQL中，通过回滚日志（undo log）实现。所有事务进行的修改都会先记录到这个回滚日志中，然后在对数据库中的对应行进行写入。 </p>
-<h2 id="２-一致性："><a href="#２-一致性：" class="headerlink" title="２    一致性："></a>２    <strong>一致性</strong>：</h2><p>　　一致性是指事务使得系统从一个一致的状态转换到另一个一致状态。这是说数据库事务不能破坏关系数据的完整性以及业务逻辑上的一致性。 </p>
-<h2 id="３-隔离性："><a href="#３-隔离性：" class="headerlink" title="３    隔离性："></a>３    <strong>隔离性</strong>：</h2><p>　　多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行效果。 </p>
-<p>　　<strong>并行时问题：</strong></p>
-<ul>
-<li>脏读：事务A修改了一个数据，但未提交，事务B读到了事务A未提交的更新结果，如果事务A提交失败，事务B读到的就是脏数据。</li>
-<li>不可重复读：在同一个事务中，对于同一份数据读取到的结果不一致。比如，事务B在事务A提交前读到的结果，和提交后读到的结果可能不同。</li>
-<li>幻读：在同一个事务中，同一个查询多次返回的结果不一致。事务A新增了一条记录，事务B在事务A提交前后各执行了一次查询操作，发现后一次比前一次多了一条记录。</li>
-</ul>
-<p>　　<strong>隔离级别：</strong></p>
-<ul>
-<li><p>Read Uncommitted：最低的隔离级别，什么都不需要做，一个事务可以读到另一个事务未提交的结果。所有的并发事务问题都会发生。</p>
-</li>
-<li><p>Read Committed：只有在事务提交后，其更新结果才会被其他事务看见。可以解决脏读问题。</p>
-</li>
-<li><p>Repeated Read：在一个事务中，对于同一份数据的读取结果总是相同的，无论是否有其他事务对这份数据进行操作，以及这个事务是否提交。可以解决脏读、不可重复读。</p>
-</li>
-<li><p>Serialization：事务串行化执行，隔离级别最高，牺牲了系统的并发性。可以解决并发事务的所有问题。</p>
-<p><img src="/images/事务-1.png" alt></p>
-</li>
-</ul>
-<p>　　<strong>实现方式：</strong></p>
-<ul>
-<li>锁：锁是一种最为常见的并发控制机制，在一个事务中，我们并不会将整个数据库都加锁，而是只会锁住那些需要访问的数据项， MySQL 和常见数据库中的锁都分为两种，共享锁（Shared）和互斥锁（Exclusive），前者也叫读锁，后者叫写锁。 </li>
-<li>时间戳：使用时间戳实现事务的隔离性时，往往都会使用乐观锁，先对数据进行修改，在写回时再去判断当前值，也就是时间戳是否改变过，如果没有改变过，就写入，否则，生成一个新的时间戳并再次更新数据，乐观锁其实并不是真正的锁机制，它只是一种思想 。</li>
-<li>多版本和快照隔离。</li>
-</ul>
-<h2 id="４-持久性："><a href="#４-持久性：" class="headerlink" title="４    持久性："></a>４    <strong>持久性</strong>：</h2><p>　　持久性，意味着在事务完成以后，该事务所对数据库所作的更改便持久的保存在数据库之中，并不会被回滚。 </p>
-<p>　　实现方式：与原子性一样，事务的持久性也是通过日志来实现的，MySQL 使用重做日志（redo log）实现事务的持久性，重做日志由两部分组成，一是内存中的重做日志缓冲区，因为重做日志缓冲区在内存中，所以它是易失的，另一个就是在磁盘上的重做日志文件，它是持久的。 </p>
+        <h2 id="为什么要有B树？"><a href="#为什么要有B树？" class="headerlink" title="为什么要有B树？"></a>为什么要有B树？</h2><ol>
+<li>计算机有一个局部性原理，就是说，当一个数据被用到时，其附近的数据也通常会马上被使用。所以当你用红黑树的时候，你一次只能得到一个键值的信息，而用B树，可以得到最多M-1个键值的信息。这样来说B树当然更好了。</li>
+<li>另外一方面，同样的数据，红黑树的阶数更大，B树更短，这样查找的时候当然B树更具有优势了，效率也就越高。</li>
+</ol>
+<h2 id="一、B树"><a href="#一、B树" class="headerlink" title="一、B树"></a>一、B树</h2><h3 id="B树的结构要求："><a href="#B树的结构要求：" class="headerlink" title="B树的结构要求："></a>B树的结构要求：</h3><p>　　1）根节点至少有两个子节点</p>
+<p>　　2）每个节点有M-1个key，并且以升序排列</p>
+<p>　　3）位于M-1和M key的子节点的值位于M-1 和M key对应的Value之间</p>
+<p>　　4）其它节点至少有M/2个子节点</p>
+<p>　　5）所有叶子节点都在同一层</p>
+<p><img src="/images/索引数据结构-1.png" alt></p>
+<h2 id="二、B-树"><a href="#二、B-树" class="headerlink" title="二、B+树"></a>二、B+树</h2><p>B+树是B-树的变体，也是一种多路搜索树：<br>　　1.其定义基本与B-树同，除了根节点：</p>
+<p>　　2.非叶子结点的子树指针与关键字个数相同；</p>
+<p>　　3.非叶子结点的子树指针P[i]，指向关键字值属于[K[i], K[i+1])的子树（B-树是开区间）；</p>
+<p>　   ４.为所有叶子结点增加一个链指针；</p>
+<p>　   ５.所有关键字都在叶子结点出现；</p>
+<p><img src="/images/索引数据结构-2.png" alt></p>
+<h2 id="三、B-树"><a href="#三、B-树" class="headerlink" title="三、B*树"></a>三、B*树</h2><p>　　B*树是对B+树进行的又一次的升级。在B+树的非根和非叶子结点再增加指向兄弟的指针；</p>
+<p><img src="/images/索引数据结构-3.png" alt></p>
+<h2 id="四、MySQl中索引的数据结构"><a href="#四、MySQl中索引的数据结构" class="headerlink" title="四、MySQl中索引的数据结构"></a>四、MySQl中索引的数据结构</h2><h3 id="1、MyISAM引擎"><a href="#1、MyISAM引擎" class="headerlink" title="1、MyISAM引擎"></a>1、MyISAM引擎</h3><p><img src="/images/索引数据结构-4.png" alt></p>
+<p><img src="/images/索引数据结构-5.png" alt></p>
+<p>　　MyISAM中有两种索引，分别是主索引和辅助索引，在这里面的主索引使用具有唯一性的键值进行创建，而辅助索引中键值可以是相同的。MyISAM分别会存一个索引文件和数据文件。它的主索引是非聚集索引。当我们查询的时候我们找到叶子节点中保存的地址，然后通过地址我们找到所对应的信息。</p>
+<h3 id="2、InnoDB引擎"><a href="#2、InnoDB引擎" class="headerlink" title="2、InnoDB引擎"></a>2、InnoDB引擎</h3><p><img src="/images/索引数据结构-6.png" alt></p>
+<p>　　InnoDB索引和MyISAM最大的区别是它只有一个数据文件，在InnoDB中，表数据文件本身就是按B+Tree组织的一个索引结构，这棵树的叶节点数据域保存了完整的数据记录。所以我们又把它的主索引叫做聚集索引。而它的辅助索引和MyISAM也会有所不同，它的辅助索引都是将主键作为数据域。所以，这样当我们查找的时候通过辅助索引要先找到主键，然后通过主索引再找到对于的主键，得到信息。</p>
+<p>　　因为InnoDB的数据文件本身要按主键聚集，所以<strong>InnoDB要求表必须有主键</strong>（MyISAM可以没有），如果没有显式指定，则MySQL系统会自动选择一个可以唯一标识数据记录的列作为主键，如果不存在这种列，则MySQL自动为InnoDB表生成一个隐含字段作为主键，这个字段长度为6个字节，类型为长整形。</p>
+<p><strong>InnoDB索引和MyISAM索引的区别：</strong></p>
+<p>　　一是主索引的区别，InnoDB的数据文件本身就是索引文件。而MyISAM的索引和数据是分开的。</p>
+<p>　　二是辅助索引的区别：InnoDB的辅助索引data域存储相应记录主键的值而不是地址。而MyISAM的辅助索引和主索引没有多大区别。</p>
 
       
     </div>
@@ -382,7 +383,9 @@
           
             <a href="/tags/数据库/" rel="tag"># 数据库</a>
           
-            <a href="/tags/事务/" rel="tag"># 事务</a>
+            <a href="/tags/索引/" rel="tag"># 索引</a>
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
           
         </div>
       
@@ -395,8 +398,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/06/26/网络2-HTTP/" rel="next" title="网络2 HTTP">
-                <i class="fa fa-chevron-left"></i> 网络2 HTTP
+              <a href="/2019/06/28/数据库2-索引/" rel="next" title="数据库2 索引">
+                <i class="fa fa-chevron-left"></i> 数据库2 索引
               </a>
             
           </div>
@@ -404,10 +407,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/06/28/数据库2-索引/" rel="prev" title="数据库2 索引">
-                数据库2 索引 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -546,7 +545,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#１-原子性："><span class="nav-number">1.</span> <span class="nav-text">１    原子性：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#２-一致性："><span class="nav-number">2.</span> <span class="nav-text">２    一致性：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#３-隔离性："><span class="nav-number">3.</span> <span class="nav-text">３    隔离性：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#４-持久性："><span class="nav-number">4.</span> <span class="nav-text">４    持久性：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要有B树？"><span class="nav-number">1.</span> <span class="nav-text">为什么要有B树？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、B树"><span class="nav-number">2.</span> <span class="nav-text">一、B树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B树的结构要求："><span class="nav-number">2.1.</span> <span class="nav-text">B树的结构要求：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、B-树"><span class="nav-number">3.</span> <span class="nav-text">二、B+树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、B-树"><span class="nav-number">4.</span> <span class="nav-text">三、B*树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、MySQl中索引的数据结构"><span class="nav-number">5.</span> <span class="nav-text">四、MySQl中索引的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、MyISAM引擎"><span class="nav-number">5.1.</span> <span class="nav-text">1、MyISAM引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、InnoDB引擎"><span class="nav-number">5.2.</span> <span class="nav-text">2、InnoDB引擎</span></a></li></ol></li></ol></div>
             
 
           </div>
