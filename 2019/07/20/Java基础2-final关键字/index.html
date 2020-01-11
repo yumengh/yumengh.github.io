@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://yoursite.com/2019/07/20/Java基础2-final关键字/index.html">
 <meta property="og:site_name" content="海阔天空的博客">
 <meta property="og:description" content="在进行Java编程的时候，我们通常会使用final修饰那些不想改变的数据，这样往往出于效率、设计的目的。final可以修饰类、方法、属性。 1 修饰类　　final修饰的类，不能被继承。 1234567891011public class FinalTest &amp;#123;    //父类    public final class SuperClass &amp;#123;        public">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="og:updated_time" content="2019-07-20T09:36:03.655Z">
 <meta name="twitter:card" content="summary">
@@ -109,12 +109,12 @@
             <div class="navbar-end">
                 
                 
-                <a class="navbar-item is-hidden-tablet catalogue" title="Katalog" href="javascript:;">
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
                     <i class="fas fa-list-ul"></i>
                 </a>
                 
                 
-                <a class="navbar-item search" title="Suche" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -139,7 +139,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 minutes lesen (Über 1142 Worte)
+                    8 分钟 读完 (大约 1142 个字)
                 </span>
                 
                 
@@ -208,7 +208,7 @@
 
 <div class="card">
     <div class="card-content">
-        <h3 class="menu-label has-text-centered">Gefällt Ihnen der Artikel? Unterstützen Sie den Autor mit</h3>
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
         <div class="buttons is-centered">
             
                 
@@ -264,6 +264,30 @@
 </div>
 
 
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'e347e685e5a40af64146',
+        clientSecret: '414da2f1813e1f8f91a13363ce80f15af7e0d1f0',
+        id: '4c27c75f676cb139ab4ef220c7c15841',
+        repo: 'blog-comment',
+        owner: 'yumengh',
+        admin: "yumengh",
+        createIssueManually: false,
+        distractionFreeMode: false
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
 </div>
                 
 
@@ -305,7 +329,7 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Posts
+                        文章
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
@@ -317,7 +341,7 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Kategorien
+                        分类
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
@@ -329,7 +353,7 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Tags
+                        标签
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
@@ -342,7 +366,7 @@
         
         <div class="level">
             <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">
-                Folgen</a>
+                关注我</a>
         </div>
         
         
@@ -395,7 +419,7 @@
         <div class="card-content">
             <div class="menu">
                 <h3 class="menu-label">
-                    Katalog
+                    目录
                 </h3>
                 <ul class="menu-list"><li>
         <a class="is-flex" href="#1-修饰类">
@@ -494,7 +518,7 @@
 </footer>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
-<script>moment.locale("zh-Hans");</script>
+<script>moment.locale("zh-CN");</script>
 
 
 <script>
@@ -571,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-<a id="back-to-top" title="Zurück nach oben" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
@@ -595,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="searchbox ins-search">
     <div class="searchbox-container ins-search-container">
         <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="Tippen Sie etwas..." />
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
             <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
         </div>
         <div class="searchbox-result-wrapper ins-section-wrapper">
@@ -607,11 +631,11 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Posts',
-                PAGES: 'Seiten',
-                CATEGORIES: 'Kategorien',
-                TAGS: 'Tags',
-                UNTITLED: '(Unbenannt)',
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
             },
             CONTENT_URL: '/content.json',
         };
