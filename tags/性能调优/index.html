@@ -131,6 +131,12 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2019/07/09/JVM1-性能调优/" class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/01/12/J1PaLwtX3VCcjON.jpg" alt="JVM1 性能调优">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -141,7 +147,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 293 个字)
+                    2 分钟 读完 (大约 294 个字)
                 </span>
                 
                 
@@ -155,37 +161,25 @@
         </h1>
         <div class="content">
             <h1 id="JVM参数类型"><a href="#JVM参数类型" class="headerlink" title="JVM参数类型"></a>JVM参数类型</h1><h2 id="标准参数"><a href="#标准参数" class="headerlink" title="标准参数"></a>标准参数</h2><p>　　在jvm的各个版本基本不变，保持稳定。</p>
-<p>-help</p>
-<p>-server  -client</p>
-<p>-version    -showversion</p>
-<p>-cp   -classpath</p>
-<p><img src="/images/JVM1-1.png" alt></p>
-<h2 id="X参数"><a href="#X参数" class="headerlink" title="X参数"></a>X参数</h2><p>　　非标准化参数</p>
-<p>-Xint ：解释执行。</p>
-<p><img src="/images/JVM1-2.png" alt></p>
-<p>-Xcomp ：第一次使用就编译成本地代码。</p>
-<p><img src="/images/JVM1-3.png" alt></p>
-<p>-Xmixed：混合模式（默认），JVM自己决定是否编译成本低代码。</p>
-<h2 id="XX参数"><a href="#XX参数" class="headerlink" title="XX参数"></a>XX参数</h2><p>　　使用比较多。非标准化参数，不稳定，主要用于JVM调优和Debug。</p>
-<h3 id="Boolean类型"><a href="#Boolean类型" class="headerlink" title="Boolean类型"></a>Boolean类型</h3><p>格式：-XX:[+-]<name>表示启用或者禁用name属性。</name></p>
-<p>例如：-XX:+UseConMarkSweepGC</p>
-<p>　　　-XX:+UseG1GC</p>
-<h3 id="非Boolean类型"><a href="#非Boolean类型" class="headerlink" title="非Boolean类型"></a>非Boolean类型</h3><p>格式：-XX:<name>=<value>表示name的属性的值是value。</value></name></p>
-<p>例如：-XX:MaxGCPauseMillis=500</p>
-<p>　　　-XX:GCTimeRatio=19</p>
-<h1 id="查看JVM运行时参数"><a href="#查看JVM运行时参数" class="headerlink" title="查看JVM运行时参数"></a>查看JVM运行时参数</h1><h2 id="jps"><a href="#jps" class="headerlink" title="jps"></a><strong>jps</strong></h2><p>查看虚拟机正在运行的进程，并显示虚拟机执行主类。</p>
-<p><img src="/images/JVM1-4.png" alt></p>
-<h2 id="jinfo"><a href="#jinfo" class="headerlink" title="jinfo"></a><strong>jinfo</strong></h2><p>实时查看和调整虚拟机各项参数。</p>
-<p><img src="/images/JVM1-5.png" alt></p>
-<p><img src="/images/JVM1-6.png" alt></p>
-<h2 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a><strong>jstat</strong></h2><p>查看JVM统计信息监视工具</p>
-<p>　　（１）类加载</p>
-<p>　　（２）垃圾收集</p>
-<p>　　（３）JIT编译</p>
-<p><img src="/images/JVM1-7.png" alt></p>
-
         </div>
         
+        
+        <hr style="height:1px;margin:1rem 0"/>
+		<div class="level is-mobile is-flex">
+			<div class="level-start">
+				
+				<div class="level-item is-size-7 is-uppercase">
+					<i class="fas fa-tags has-text-grey"></i>&nbsp;
+					<a class="has-link-grey -link" href="/tags/JVM/">JVM</a>,&nbsp;<a class="has-link-grey -link" href="/tags/性能调优/">性能调优</a>
+				</div>
+				
+			</div>
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/07/09/JVM1-性能调优/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -284,37 +278,9 @@
         <div class="level is-mobile">
             
             <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Github" href="https://github.com/ppoffice">
+                title="Github" href="https://github.com/yumengh">
                 
                 <i class="fab fa-github"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Facebook" href="https://facebook.com">
-                
-                <i class="fab fa-facebook"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Twitter" href="https://twitter.com">
-                
-                <i class="fab fa-twitter"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Dribbble" href="https://dribbble.com">
-                
-                <i class="fab fa-dribbble"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="RSS" href="/">
-                
-                <i class="fas fa-rss"></i>
                 
             </a>
             
@@ -416,7 +382,7 @@
             
             <a href="/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="ZooKeeper1-ZooKeeper介绍.md">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg" alt="ZooKeeper1-ZooKeeper介绍.md">
                 </p>
             </a>
             
@@ -435,7 +401,7 @@
             
             <a href="/2019/07/20/Java基础2-final关键字/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础2 final关键字">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg" alt="Java基础2 final关键字">
                 </p>
             </a>
             
@@ -454,7 +420,7 @@
             
             <a href="/2019/07/17/Java基础1-sleep-和wait-的区别/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础1 sleep()和wait()的区别">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg" alt="Java基础1 sleep()和wait()的区别">
                 </p>
             </a>
             
@@ -473,7 +439,7 @@
             
             <a href="/2019/07/09/JVM1-性能调优/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM1 性能调优">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/J1PaLwtX3VCcjON.jpg" alt="JVM1 性能调优">
                 </p>
             </a>
             
@@ -693,7 +659,7 @@
             
             <a href="/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="ZooKeeper1-ZooKeeper介绍.md">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg" alt="ZooKeeper1-ZooKeeper介绍.md">
                 </p>
             </a>
             
@@ -712,7 +678,7 @@
             
             <a href="/2019/07/20/Java基础2-final关键字/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础2 final关键字">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg" alt="Java基础2 final关键字">
                 </p>
             </a>
             
@@ -731,7 +697,7 @@
             
             <a href="/2019/07/17/Java基础1-sleep-和wait-的区别/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础1 sleep()和wait()的区别">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg" alt="Java基础1 sleep()和wait()的区别">
                 </p>
             </a>
             
@@ -750,7 +716,7 @@
             
             <a href="/2019/07/09/JVM1-性能调优/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM1 性能调优">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/J1PaLwtX3VCcjON.jpg" alt="JVM1 性能调优">
                 </p>
             </a>
             
@@ -957,23 +923,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
-                        
-                        <i class="fab fa-creative-commons"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
-                        
-                        <i class="fab fa-creative-commons-by"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
                         
                         <i class="fab fa-github"></i>
                         

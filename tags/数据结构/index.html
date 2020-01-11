@@ -131,6 +131,12 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2019/06/28/数据库3-索引数据结构/" class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/01/12/Fxf6OhYoAtHvZUa.jpg" alt="数据库3 索引数据结构">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -141,7 +147,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1029 个字)
+                    7 分钟 读完 (大约 1030 个字)
                 </span>
                 
                 
@@ -155,35 +161,28 @@
         </h1>
         <div class="content">
             <h2 id="为什么要有B树？"><a href="#为什么要有B树？" class="headerlink" title="为什么要有B树？"></a>为什么要有B树？</h2><ol>
-<li>计算机有一个局部性原理，就是说，当一个数据被用到时，其附近的数据也通常会马上被使用。所以当你用红黑树的时候，你一次只能得到一个键值的信息，而用B树，可以得到最多M-1个键值的信息。这样来说B树当然更好了。</li>
-<li>另外一方面，同样的数据，红黑树的阶数更大，B树更短，这样查找的时候当然B树更具有优势了，效率也就越高。</li>
-</ol>
-<h2 id="一、B树"><a href="#一、B树" class="headerlink" title="一、B树"></a>一、B树</h2><h3 id="B树的结构要求："><a href="#B树的结构要求：" class="headerlink" title="B树的结构要求："></a>B树的结构要求：</h3><p>　　1）根节点至少有两个子节点</p>
-<p>　　2）每个节点有M-1个key，并且以升序排列</p>
-<p>　　3）位于M-1和M key的子节点的值位于M-1 和M key对应的Value之间</p>
-<p>　　4）其它节点至少有M/2个子节点</p>
-<p>　　5）所有叶子节点都在同一层</p>
-<p><img src="/images/索引数据结构-1.png" alt></p>
-<h2 id="二、B-树"><a href="#二、B-树" class="headerlink" title="二、B+树"></a>二、B+树</h2><p>B+树是B-树的变体，也是一种多路搜索树：<br>　　1.其定义基本与B-树同，除了根节点：</p>
-<p>　　2.非叶子结点的子树指针与关键字个数相同；</p>
-<p>　　3.非叶子结点的子树指针P[i]，指向关键字值属于[K[i], K[i+1])的子树（B-树是开区间）；</p>
-<p>　   ４.为所有叶子结点增加一个链指针；</p>
-<p>　   ５.所有关键字都在叶子结点出现；</p>
-<p><img src="/images/索引数据结构-2.png" alt></p>
-<h2 id="三、B-树"><a href="#三、B-树" class="headerlink" title="三、B*树"></a>三、B*树</h2><p>　　B*树是对B+树进行的又一次的升级。在B+树的非根和非叶子结点再增加指向兄弟的指针；</p>
-<p><img src="/images/索引数据结构-3.png" alt></p>
-<h2 id="四、MySQl中索引的数据结构"><a href="#四、MySQl中索引的数据结构" class="headerlink" title="四、MySQl中索引的数据结构"></a>四、MySQl中索引的数据结构</h2><h3 id="1、MyISAM引擎"><a href="#1、MyISAM引擎" class="headerlink" title="1、MyISAM引擎"></a>1、MyISAM引擎</h3><p><img src="/images/索引数据结构-4.png" alt></p>
-<p><img src="/images/索引数据结构-5.png" alt></p>
-<p>　　MyISAM中有两种索引，分别是主索引和辅助索引，在这里面的主索引使用具有唯一性的键值进行创建，而辅助索引中键值可以是相同的。MyISAM分别会存一个索引文件和数据文件。它的主索引是非聚集索引。当我们查询的时候我们找到叶子节点中保存的地址，然后通过地址我们找到所对应的信息。</p>
-<h3 id="2、InnoDB引擎"><a href="#2、InnoDB引擎" class="headerlink" title="2、InnoDB引擎"></a>2、InnoDB引擎</h3><p><img src="/images/索引数据结构-6.png" alt></p>
-<p>　　InnoDB索引和MyISAM最大的区别是它只有一个数据文件，在InnoDB中，表数据文件本身就是按B+Tree组织的一个索引结构，这棵树的叶节点数据域保存了完整的数据记录。所以我们又把它的主索引叫做聚集索引。而它的辅助索引和MyISAM也会有所不同，它的辅助索引都是将主键作为数据域。所以，这样当我们查找的时候通过辅助索引要先找到主键，然后通过主索引再找到对于的主键，得到信息。</p>
-<p>　　因为InnoDB的数据文件本身要按主键聚集，所以<strong>InnoDB要求表必须有主键</strong>（MyISAM可以没有），如果没有显式指定，则MySQL系统会自动选择一个可以唯一标识数据记录的列作为主键，如果不存在这种列，则MySQL自动为InnoDB表生成一个隐含字段作为主键，这个字段长度为6个字节，类型为长整形。</p>
-<p><strong>InnoDB索引和MyISAM索引的区别：</strong></p>
-<p>　　一是主索引的区别，InnoDB的数据文件本身就是索引文件。而MyISAM的索引和数据是分开的。</p>
-<p>　　二是辅助索引的区别：InnoDB的辅助索引data域存储相应记录主键的值而不是地址。而MyISAM的辅助索引和主索引没有多大区别。</p>
-
+<li><p>计算机有一个局部性原理，就是说，当一个数据被用到时，其附近的数据也通常会马上被使用。所以当你用红黑树的时候，你一次只能得到一个键值的信息，而用B树，可以得到最多M-1个键值的信息。这样来说B树当然更好了。</p>
+</li>
+<li><p>另外一方面，同样的数据，红黑树的阶数更大，B树更短，这样查找的时候当然B树更具有优势了，效率也就越高。</p>
         </div>
         
+        
+        <hr style="height:1px;margin:1rem 0"/>
+		<div class="level is-mobile is-flex">
+			<div class="level-start">
+				
+				<div class="level-item is-size-7 is-uppercase">
+					<i class="fas fa-tags has-text-grey"></i>&nbsp;
+					<a class="has-link-grey -link" href="/tags/数据库/">数据库</a>,&nbsp;<a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>,&nbsp;<a class="has-link-grey -link" href="/tags/索引/">索引</a>
+				</div>
+				
+			</div>
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/06/28/数据库3-索引数据结构/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -282,37 +281,9 @@
         <div class="level is-mobile">
             
             <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Github" href="https://github.com/ppoffice">
+                title="Github" href="https://github.com/yumengh">
                 
                 <i class="fab fa-github"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Facebook" href="https://facebook.com">
-                
-                <i class="fab fa-facebook"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Twitter" href="https://twitter.com">
-                
-                <i class="fab fa-twitter"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Dribbble" href="https://dribbble.com">
-                
-                <i class="fab fa-dribbble"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="RSS" href="/">
-                
-                <i class="fas fa-rss"></i>
                 
             </a>
             
@@ -414,7 +385,7 @@
             
             <a href="/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="ZooKeeper1-ZooKeeper介绍.md">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg" alt="ZooKeeper1-ZooKeeper介绍.md">
                 </p>
             </a>
             
@@ -433,7 +404,7 @@
             
             <a href="/2019/07/20/Java基础2-final关键字/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础2 final关键字">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg" alt="Java基础2 final关键字">
                 </p>
             </a>
             
@@ -452,7 +423,7 @@
             
             <a href="/2019/07/17/Java基础1-sleep-和wait-的区别/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础1 sleep()和wait()的区别">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg" alt="Java基础1 sleep()和wait()的区别">
                 </p>
             </a>
             
@@ -471,7 +442,7 @@
             
             <a href="/2019/07/09/JVM1-性能调优/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM1 性能调优">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/J1PaLwtX3VCcjON.jpg" alt="JVM1 性能调优">
                 </p>
             </a>
             
@@ -691,7 +662,7 @@
             
             <a href="/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="ZooKeeper1-ZooKeeper介绍.md">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg" alt="ZooKeeper1-ZooKeeper介绍.md">
                 </p>
             </a>
             
@@ -710,7 +681,7 @@
             
             <a href="/2019/07/20/Java基础2-final关键字/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础2 final关键字">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg" alt="Java基础2 final关键字">
                 </p>
             </a>
             
@@ -729,7 +700,7 @@
             
             <a href="/2019/07/17/Java基础1-sleep-和wait-的区别/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础1 sleep()和wait()的区别">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg" alt="Java基础1 sleep()和wait()的区别">
                 </p>
             </a>
             
@@ -748,7 +719,7 @@
             
             <a href="/2019/07/09/JVM1-性能调优/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM1 性能调优">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/J1PaLwtX3VCcjON.jpg" alt="JVM1 性能调优">
                 </p>
             </a>
             
@@ -955,23 +926,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
-                        
-                        <i class="fab fa-creative-commons"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
-                        
-                        <i class="fab fa-creative-commons-by"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
                         
                         <i class="fab fa-github"></i>
                         

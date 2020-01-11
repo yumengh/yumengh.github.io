@@ -131,6 +131,12 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2019/06/28/数据库3-索引数据结构/" class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/01/12/Fxf6OhYoAtHvZUa.jpg" alt="数据库3 索引数据结构">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -141,7 +147,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1029 个字)
+                    7 分钟 读完 (大约 1030 个字)
                 </span>
                 
                 
@@ -155,35 +161,28 @@
         </h1>
         <div class="content">
             <h2 id="为什么要有B树？"><a href="#为什么要有B树？" class="headerlink" title="为什么要有B树？"></a>为什么要有B树？</h2><ol>
-<li>计算机有一个局部性原理，就是说，当一个数据被用到时，其附近的数据也通常会马上被使用。所以当你用红黑树的时候，你一次只能得到一个键值的信息，而用B树，可以得到最多M-1个键值的信息。这样来说B树当然更好了。</li>
-<li>另外一方面，同样的数据，红黑树的阶数更大，B树更短，这样查找的时候当然B树更具有优势了，效率也就越高。</li>
-</ol>
-<h2 id="一、B树"><a href="#一、B树" class="headerlink" title="一、B树"></a>一、B树</h2><h3 id="B树的结构要求："><a href="#B树的结构要求：" class="headerlink" title="B树的结构要求："></a>B树的结构要求：</h3><p>　　1）根节点至少有两个子节点</p>
-<p>　　2）每个节点有M-1个key，并且以升序排列</p>
-<p>　　3）位于M-1和M key的子节点的值位于M-1 和M key对应的Value之间</p>
-<p>　　4）其它节点至少有M/2个子节点</p>
-<p>　　5）所有叶子节点都在同一层</p>
-<p><img src="/images/索引数据结构-1.png" alt></p>
-<h2 id="二、B-树"><a href="#二、B-树" class="headerlink" title="二、B+树"></a>二、B+树</h2><p>B+树是B-树的变体，也是一种多路搜索树：<br>　　1.其定义基本与B-树同，除了根节点：</p>
-<p>　　2.非叶子结点的子树指针与关键字个数相同；</p>
-<p>　　3.非叶子结点的子树指针P[i]，指向关键字值属于[K[i], K[i+1])的子树（B-树是开区间）；</p>
-<p>　   ４.为所有叶子结点增加一个链指针；</p>
-<p>　   ５.所有关键字都在叶子结点出现；</p>
-<p><img src="/images/索引数据结构-2.png" alt></p>
-<h2 id="三、B-树"><a href="#三、B-树" class="headerlink" title="三、B*树"></a>三、B*树</h2><p>　　B*树是对B+树进行的又一次的升级。在B+树的非根和非叶子结点再增加指向兄弟的指针；</p>
-<p><img src="/images/索引数据结构-3.png" alt></p>
-<h2 id="四、MySQl中索引的数据结构"><a href="#四、MySQl中索引的数据结构" class="headerlink" title="四、MySQl中索引的数据结构"></a>四、MySQl中索引的数据结构</h2><h3 id="1、MyISAM引擎"><a href="#1、MyISAM引擎" class="headerlink" title="1、MyISAM引擎"></a>1、MyISAM引擎</h3><p><img src="/images/索引数据结构-4.png" alt></p>
-<p><img src="/images/索引数据结构-5.png" alt></p>
-<p>　　MyISAM中有两种索引，分别是主索引和辅助索引，在这里面的主索引使用具有唯一性的键值进行创建，而辅助索引中键值可以是相同的。MyISAM分别会存一个索引文件和数据文件。它的主索引是非聚集索引。当我们查询的时候我们找到叶子节点中保存的地址，然后通过地址我们找到所对应的信息。</p>
-<h3 id="2、InnoDB引擎"><a href="#2、InnoDB引擎" class="headerlink" title="2、InnoDB引擎"></a>2、InnoDB引擎</h3><p><img src="/images/索引数据结构-6.png" alt></p>
-<p>　　InnoDB索引和MyISAM最大的区别是它只有一个数据文件，在InnoDB中，表数据文件本身就是按B+Tree组织的一个索引结构，这棵树的叶节点数据域保存了完整的数据记录。所以我们又把它的主索引叫做聚集索引。而它的辅助索引和MyISAM也会有所不同，它的辅助索引都是将主键作为数据域。所以，这样当我们查找的时候通过辅助索引要先找到主键，然后通过主索引再找到对于的主键，得到信息。</p>
-<p>　　因为InnoDB的数据文件本身要按主键聚集，所以<strong>InnoDB要求表必须有主键</strong>（MyISAM可以没有），如果没有显式指定，则MySQL系统会自动选择一个可以唯一标识数据记录的列作为主键，如果不存在这种列，则MySQL自动为InnoDB表生成一个隐含字段作为主键，这个字段长度为6个字节，类型为长整形。</p>
-<p><strong>InnoDB索引和MyISAM索引的区别：</strong></p>
-<p>　　一是主索引的区别，InnoDB的数据文件本身就是索引文件。而MyISAM的索引和数据是分开的。</p>
-<p>　　二是辅助索引的区别：InnoDB的辅助索引data域存储相应记录主键的值而不是地址。而MyISAM的辅助索引和主索引没有多大区别。</p>
-
+<li><p>计算机有一个局部性原理，就是说，当一个数据被用到时，其附近的数据也通常会马上被使用。所以当你用红黑树的时候，你一次只能得到一个键值的信息，而用B树，可以得到最多M-1个键值的信息。这样来说B树当然更好了。</p>
+</li>
+<li><p>另外一方面，同样的数据，红黑树的阶数更大，B树更短，这样查找的时候当然B树更具有优势了，效率也就越高。</p>
         </div>
         
+        
+        <hr style="height:1px;margin:1rem 0"/>
+		<div class="level is-mobile is-flex">
+			<div class="level-start">
+				
+				<div class="level-item is-size-7 is-uppercase">
+					<i class="fas fa-tags has-text-grey"></i>&nbsp;
+					<a class="has-link-grey -link" href="/tags/数据库/">数据库</a>,&nbsp;<a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>,&nbsp;<a class="has-link-grey -link" href="/tags/索引/">索引</a>
+				</div>
+				
+			</div>
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/06/28/数据库3-索引数据结构/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -199,6 +198,12 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2019/06/28/数据库2-索引/" class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/01/12/MgQ94URiwd7IXYN.jpg" alt="数据库2 索引">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -209,7 +214,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分钟 读完 (大约 1465 个字)
+                    10 分钟 读完 (大约 1466 个字)
                 </span>
                 
                 
@@ -223,34 +228,25 @@
         </h1>
         <div class="content">
             <h2 id="一、索引的概念"><a href="#一、索引的概念" class="headerlink" title="一、索引的概念"></a><strong>一、索引的概念</strong></h2><p>　　索引就是加快检索表中数据的方法。数据库的索引类似于书籍的索引。在书籍中，索引允许用户不必翻阅完整个书就能迅速地找到所需要的信息。在数据库中，索引也允许数据库程序迅速地找到表中的数据，而不必扫描整个数据库。</p>
-<h2 id="二、索引的特点"><a href="#二、索引的特点" class="headerlink" title="二、索引的特点"></a><strong>二、索引的特点</strong></h2><p>　　1.索引可以加快数据库的检索速度</p>
-<p>　　2.索引降低了数据库插入、修改、删除等维护任务的速度</p>
-<p>　　3.索引创建在表上，不能创建在视图上</p>
-<p>　　4.索引既可以直接创建，也可以间接创建</p>
-<p>　　5.可以在优化隐藏中，使用索引</p>
-<p>　　6.使用查询处理器执行SQL语句，在一个表上，一次只能使用一个索引</p>
-<h2 id="三、索引的优点"><a href="#三、索引的优点" class="headerlink" title="三、索引的优点"></a><strong>三、索引的优点</strong></h2><p>　　1.创建唯一性索引，保证数据库表中每一行数据的唯一性</p>
-<p>　　2.大大加快数据的检索速度，这也是创建索引的最主要的原因</p>
-<p>　　3.加速表和表之间的连接，特别是在实现数据的参考完整性方面特别有意义。</p>
-<p>　　4.在使用分组和排序子句进行数据检索时，同样可以显著减少查询中分组和排序的时间。</p>
-<p>　　5.通过使用索引，可以在查询的过程中使用优化隐藏器，提高系统的性能。</p>
-<h2 id="四、索引的缺点"><a href="#四、索引的缺点" class="headerlink" title="四、索引的缺点"></a><strong>四、索引的缺点</strong></h2><p>　　1.创建索引和维护索引要耗费时间，这种时间随着数据量的增加而增加</p>
-<p>　　2.索引需要占物理空间，除了数据表占数据空间之外，每一个索引还要占一定的物理空间，如果要建立聚簇索引，那么需要的空间就会更大</p>
-<p>　　3.当对表中的数据进行增加、删除和修改的时候，索引也要动态的维护，降低了数据的维护速度</p>
-<h2 id="五、应该建立索引的情况"><a href="#五、应该建立索引的情况" class="headerlink" title="五、应该建立索引的情况"></a><strong>五、应该建立索引的情况</strong></h2><p>　　1.在经常需要搜索的列上，可以加快搜索的速度；</p>
-<p>　　2.在作为主键的列上，强制该列的唯一性和组织表中数据的排列结构；</p>
-<p>　　3.在经常用在连接的列上，这些列主要是一些外键，可以加快连接的速度；</p>
-<p>　　4.在经常需要根据范围进行搜索的列上创建索引，因为索引已经排序，其指定的范围是连续的；</p>
-<p>　　5.在经常需要排序的列上创建索引，因为索引已经排序，这样查询可以利用索引的排序，加快排序查询时间；</p>
-<p>　　6.在经常使用在WHERE子句中的列上面创建索引，加快条件的判断速度。</p>
-<h2 id="六、不应该建立索引的情况"><a href="#六、不应该建立索引的情况" class="headerlink" title="六、不应该建立索引的情况"></a><strong>六、不应该建立索引的情况</strong></h2><p>　　1.对于那些在查询中很少使用或者参考的列不应该创建索引。这是因为，既然这些列很少使用到，因此有索引或者无索引，并不能提高查询速度。相反，由于增加了索引，反而降低了系统的维护速度和增大了空间需求。</p>
-<p>　　2.对于那些只有很少数据值的列也不应该增加索引。这是因为，由于这些列的取值很少，例如人事表的性别列，在查询的结果中，结果集的数据行占了表中数据行的很大比例，即需要在表中搜索的数据行的比例很大。增加索引，并不能明显加快检索速度。</p>
-<p>　　3.对于那些定义为text, image和bit数据类型的列不应该增加索引。这是因为，这些列的数据量要么相当大，要么取值很少。</p>
-<p>　　4.当修改性能远远大于检索性能时，不应该创建索引。这是因为，修改性能和检索性能是互相矛盾的。当增加索引时，会提高检索性能，但是会降低修改性能。当减少索引时，会提高修改性能，降低检索性能。因此，当修改性能远远大于检索性能时，不应该创建索引。</p>
-<h2 id="七、索引建立的原则"><a href="#七、索引建立的原则" class="headerlink" title="七、索引建立的原则"></a><strong>七、索引建立的原则</strong></h2><p>　　1. 在经常用作过滤器的字段上建立索引；<br>　　2. 在SQL语句中经常进行GROUP BY、ORDER BY的字段上建立索引；<br>　　3. 在不同值较少的字段上不必要建立索引，如性别字段；<br>　　4. 对于经常存取的列避免建立索引；<br>　　5. 用于联接的列（主健/外健）上建立索引；<br>　　6. 在经常存取的多个列上建立复合索引，但要注意复合索引的建立顺序要按照使用的频度来确定；<br>　　7. 缺省情况下建立的是非簇集索引，但在以下情况下最好考虑簇集索引，如：含有有限数目（不是很少）唯一的列；进行大范围的查询；充分的利用索引可以减少表扫描I/0的次数，有效的避免对整表的搜索。当然合理的索引要建立在对各种查询的分析和预测中，也取决于DBA的所设计的数据库结构。</p>
-
         </div>
         
+        
+        <hr style="height:1px;margin:1rem 0"/>
+		<div class="level is-mobile is-flex">
+			<div class="level-start">
+				
+				<div class="level-item is-size-7 is-uppercase">
+					<i class="fas fa-tags has-text-grey"></i>&nbsp;
+					<a class="has-link-grey -link" href="/tags/数据库/">数据库</a>,&nbsp;<a class="has-link-grey -link" href="/tags/索引/">索引</a>
+				</div>
+				
+			</div>
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/06/28/数据库2-索引/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -349,37 +345,9 @@
         <div class="level is-mobile">
             
             <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Github" href="https://github.com/ppoffice">
+                title="Github" href="https://github.com/yumengh">
                 
                 <i class="fab fa-github"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Facebook" href="https://facebook.com">
-                
-                <i class="fab fa-facebook"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Twitter" href="https://twitter.com">
-                
-                <i class="fab fa-twitter"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Dribbble" href="https://dribbble.com">
-                
-                <i class="fab fa-dribbble"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="RSS" href="/">
-                
-                <i class="fas fa-rss"></i>
                 
             </a>
             
@@ -481,7 +449,7 @@
             
             <a href="/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="ZooKeeper1-ZooKeeper介绍.md">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg" alt="ZooKeeper1-ZooKeeper介绍.md">
                 </p>
             </a>
             
@@ -500,7 +468,7 @@
             
             <a href="/2019/07/20/Java基础2-final关键字/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础2 final关键字">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg" alt="Java基础2 final关键字">
                 </p>
             </a>
             
@@ -519,7 +487,7 @@
             
             <a href="/2019/07/17/Java基础1-sleep-和wait-的区别/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础1 sleep()和wait()的区别">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg" alt="Java基础1 sleep()和wait()的区别">
                 </p>
             </a>
             
@@ -538,7 +506,7 @@
             
             <a href="/2019/07/09/JVM1-性能调优/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM1 性能调优">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/J1PaLwtX3VCcjON.jpg" alt="JVM1 性能调优">
                 </p>
             </a>
             
@@ -758,7 +726,7 @@
             
             <a href="/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="ZooKeeper1-ZooKeeper介绍.md">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg" alt="ZooKeeper1-ZooKeeper介绍.md">
                 </p>
             </a>
             
@@ -777,7 +745,7 @@
             
             <a href="/2019/07/20/Java基础2-final关键字/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础2 final关键字">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg" alt="Java基础2 final关键字">
                 </p>
             </a>
             
@@ -796,7 +764,7 @@
             
             <a href="/2019/07/17/Java基础1-sleep-和wait-的区别/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Java基础1 sleep()和wait()的区别">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg" alt="Java基础1 sleep()和wait()的区别">
                 </p>
             </a>
             
@@ -815,7 +783,7 @@
             
             <a href="/2019/07/09/JVM1-性能调优/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM1 性能调优">
+                    <img class="thumbnail" src="https://i.loli.net/2020/01/12/J1PaLwtX3VCcjON.jpg" alt="JVM1 性能调优">
                 </p>
             </a>
             
@@ -1022,23 +990,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
-                        
-                        <i class="fab fa-creative-commons"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
-                        
-                        <i class="fab fa-creative-commons-by"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
                         
                         <i class="fab fa-github"></i>
                         

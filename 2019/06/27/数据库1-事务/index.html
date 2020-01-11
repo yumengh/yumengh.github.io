@@ -10,20 +10,20 @@
 <title>数据库1 事务 - 海阔天空的博客</title>
 
 
-    <meta name="description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID） １    原子性：　　原子性是指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样 。 　　实现方式：在发生异常时，对已经执行的操作进行回滚，在MySQL中，通过回滚日志（undo log）实现。所有事务进行的修改都">
+    <meta name="description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID）">
 <meta name="keywords" content="数据库,事务">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据库1 事务">
 <meta property="og:url" content="http://yoursite.com/2019/06/27/数据库1-事务/index.html">
 <meta property="og:site_name" content="海阔天空的博客">
-<meta property="og:description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID） １    原子性：　　原子性是指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样 。 　　实现方式：在发生异常时，对已经执行的操作进行回滚，在MySQL中，通过回滚日志（undo log）实现。所有事务进行的修改都">
+<meta property="og:description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID）">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-06-27T10:42:51.350Z">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/kf7DmUIyoTgdN6s.jpg">
+<meta property="og:updated_time" content="2020-01-11T17:06:57.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库1 事务">
-<meta name="twitter:description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID） １    原子性：　　原子性是指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样 。 　　实现方式：在发生异常时，对已经执行的操作进行回滚，在MySQL中，通过回滚日志（undo log）实现。所有事务进行的修改都">
-<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
+<meta name="twitter:description" content="事务的基本特性原子性、一致性、隔离性、持久性。（ACID）">
+<meta name="twitter:image" content="https://i.loli.net/2020/01/12/kf7DmUIyoTgdN6s.jpg">
 
 
 
@@ -129,6 +129,12 @@
                 <div class="column is-8-tablet is-9-desktop is-9-widescreen has-order-2 column-main">
 <div class="card">
     
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/01/12/kf7DmUIyoTgdN6s.jpg" alt="数据库1 事务">
+        </span>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -139,7 +145,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1144 个字)
+                    8 分钟 读完 (大约 1145 个字)
                 </span>
                 
                 
@@ -153,6 +159,7 @@
         </h1>
         <div class="content">
             <p>事务的<strong>基本特性</strong>原子性、一致性、隔离性、持久性。（ACID）</p>
+ <a id="more"></a> 
 <h2 id="１-原子性："><a href="#１-原子性：" class="headerlink" title="１    原子性："></a>１    <strong>原子性</strong>：</h2><p>　　原子性是指事务是一个不可再分割的工作单位，事务中的操作要么都发生，要么都不发生。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样 。</p>
 <p>　　实现方式：在发生异常时，对已经执行的操作进行回滚，在MySQL中，通过回滚日志（undo log）实现。所有事务进行的修改都会先记录到这个回滚日志中，然后在对数据库中的对应行进行写入。 </p>
 <h2 id="２-一致性："><a href="#２-一致性：" class="headerlink" title="２    一致性："></a>２    <strong>一致性</strong>：</h2><p>　　一致性是指事务使得系统从一个一致的状态转换到另一个一致状态。这是说数据库事务不能破坏关系数据的完整性以及业务逻辑上的一致性。 </p>
@@ -172,7 +179,7 @@
 <li><p>Repeated Read：在一个事务中，对于同一份数据的读取结果总是相同的，无论是否有其他事务对这份数据进行操作，以及这个事务是否提交。可以解决脏读、不可重复读。</p>
 </li>
 <li><p>Serialization：事务串行化执行，隔离级别最高，牺牲了系统的并发性。可以解决并发事务的所有问题。</p>
-<p><img src="/images/事务-1.png" alt></p>
+<p><img src="/images/事务-1.png" alt=""></p>
 </li>
 </ul>
 <p>　　<strong>实现方式：</strong></p>
@@ -371,37 +378,9 @@
         <div class="level is-mobile">
             
             <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Github" href="https://github.com/ppoffice">
+                title="Github" href="https://github.com/yumengh">
                 
                 <i class="fab fa-github"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Facebook" href="https://facebook.com">
-                
-                <i class="fab fa-facebook"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Twitter" href="https://twitter.com">
-                
-                <i class="fab fa-twitter"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Dribbble" href="https://dribbble.com">
-                
-                <i class="fab fa-dribbble"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="RSS" href="/">
-                
-                <i class="fas fa-rss"></i>
                 
             </a>
             
@@ -472,23 +451,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
-                        
-                        <i class="fab fa-creative-commons"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
-                        
-                        <i class="fab fa-creative-commons-by"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
                         
                         <i class="fab fa-github"></i>
                         

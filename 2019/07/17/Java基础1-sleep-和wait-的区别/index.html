@@ -10,20 +10,20 @@
 <title>Java基础1 sleep()和wait()的区别 - 海阔天空的博客</title>
 
 
-    <meta name="description" content="wait和sleep都会暂停当前线程，对于cpu资源来说，两者都会使cpu将时间片分配给别的线程。 1 用法　　sleep是Thread类的方法，wait是Object类的方法。 　　sleep可以在任何地方使用，而wait只能在同步方法或者同步块中使用。  12345try &amp;#123;	Thread.sleep(...);&amp;#125; catch (InterruptedException">
+    <meta name="description" content="wait和sleep都会暂停当前线程，对于cpu资源来说，两者都会使cpu将时间片分配给别的线程。">
 <meta name="keywords" content="Java,多线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java基础1 sleep()和wait()的区别">
 <meta property="og:url" content="http://yoursite.com/2019/07/17/Java基础1-sleep-和wait-的区别/index.html">
 <meta property="og:site_name" content="海阔天空的博客">
-<meta property="og:description" content="wait和sleep都会暂停当前线程，对于cpu资源来说，两者都会使cpu将时间片分配给别的线程。 1 用法　　sleep是Thread类的方法，wait是Object类的方法。 　　sleep可以在任何地方使用，而wait只能在同步方法或者同步块中使用。  12345try &amp;#123;	Thread.sleep(...);&amp;#125; catch (InterruptedException">
+<meta property="og:description" content="wait和sleep都会暂停当前线程，对于cpu资源来说，两者都会使cpu将时间片分配给别的线程。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-07-17T11:58:29.342Z">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg">
+<meta property="og:updated_time" content="2020-01-11T16:54:16.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java基础1 sleep()和wait()的区别">
-<meta name="twitter:description" content="wait和sleep都会暂停当前线程，对于cpu资源来说，两者都会使cpu将时间片分配给别的线程。 1 用法　　sleep是Thread类的方法，wait是Object类的方法。 　　sleep可以在任何地方使用，而wait只能在同步方法或者同步块中使用。  12345try &amp;#123;	Thread.sleep(...);&amp;#125; catch (InterruptedException">
-<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
+<meta name="twitter:description" content="wait和sleep都会暂停当前线程，对于cpu资源来说，两者都会使cpu将时间片分配给别的线程。">
+<meta name="twitter:image" content="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg">
 
 
 
@@ -129,6 +129,12 @@
                 <div class="column is-8-tablet is-9-desktop is-9-widescreen has-order-2 column-main">
 <div class="card">
     
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/01/12/gPjdE1QbMyvIn6T.jpg" alt="Java基础1 sleep()和wait()的区别">
+        </span>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -139,7 +145,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1018 个字)
+                    7 分钟 读完 (大约 1019 个字)
                 </span>
                 
                 
@@ -153,6 +159,7 @@
         </h1>
         <div class="content">
             <p>　　wait和sleep都会暂停当前线程，对于cpu资源来说，两者都会使cpu将时间片分配给别的线程。</p>
+ <a id="more"></a> 
 <h2 id="1-用法"><a href="#1-用法" class="headerlink" title="1 用法"></a>1 用法</h2><p>　　sleep是<code>Thread</code>类的方法，wait是<code>Object</code>类的方法。</p>
 <p>　　sleep可以在任何地方使用，而wait只能在同步方法或者同步块中使用。 </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	Thread.sleep(...);</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -161,15 +168,15 @@
 <h2 id="2-资源锁释放"><a href="#2-资源锁释放" class="headerlink" title="2 资源锁释放"></a>2 资源锁释放</h2><p>　　sleep()方法正在执行的线程主动让出CPU（然后CPU就可以去执行其他任务），在sleep指定时间后CPU再回到该线程继续往下执行(注意：sleep方法只让出了CPU，而并不会释放同步资源锁！！！)；wait()方法则是指当前线程让自己暂时退让出同步资源锁，以便其他正在等待该资源的线程得到该资源进而运行，只有调用了notify()方法，之前调用wait()的线程才会解除wait状态，可以去参与竞争同步资源锁，进而得到执行。（注意：notify的作用相当于叫醒睡着的人，而并不会给他分配任务，就是说notify只是让之前调用wait的线程有权利重新参与线程的调度）；</p>
 <p>　　如线程状态图所示，当线程处于<code>running</code>状态，此时线程正在执行，当该线程执行到<code>Thread.sleep()</code>，之后处于<code>阻塞</code>状态，当<code>sleep()</code>时间结束后，此时该线程处于<code>runnable</code>状态，如果之后被cpu选中，则可以继续执行。</p>
 <p>　　如果线程处于<code>running</code>状态，之后开始执行<code>o.wait()</code>方法，此时处于等待队列，在被别的线程唤醒之后，处于锁池中，之后还需要和别的线程竞争锁，获得锁之后，才转为<code>runnable</code>状态，如果之后被cpu选中，则可以继续执行。</p>
-<p><img src="/images/Java基础1-sleep-和wait-的区别/1.jpg" alt></p>
+<p><img src="/images/Java基础1-sleep-和wait-的区别/1.jpg" alt=""></p>
 <p>　　下面这段代码具体展示了相关的内容。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.exercise.MultitThread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WaitSleepTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread1</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (WaitSleepTest.class)&#123;</span><br><span class="line">                System.out.println(<span class="string">"Thread1 开始执行"</span>);</span><br><span class="line">                System.out.println(<span class="string">"Thread1 执行wait"</span>);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    WaitSleepTest.class.wait();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"Thread1 执行完毕"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread2</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (WaitSleepTest.class)&#123;</span><br><span class="line">                System.out.println(<span class="string">"Thread2 开始执行"</span>);</span><br><span class="line">                System.out.println(<span class="string">"Thread2 通知Thread1 开始执行"</span>);</span><br><span class="line">                WaitSleepTest.class.notify();</span><br><span class="line">                System.out.println(<span class="string">"Thread2 睡眠10ms"</span>);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">10</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">"Thread2 开始执行"</span>);</span><br><span class="line">                System.out.println(<span class="string">"Thread2 执行完毕"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Thread1()).start();</span><br><span class="line">        System.out.println(<span class="string">"主线程 睡眠10ms"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">10</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Thread2()).start();</span><br><span class="line">        System.out.println(<span class="string">"主线程 执行完毕"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>　　执行结果</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">主线程 睡眠10ms</span><br><span class="line">Thread1 开始执行</span><br><span class="line">Thread1 执行wait</span><br><span class="line">主线程 执行完毕</span><br><span class="line">Thread2 开始执行</span><br><span class="line">Thread2 通知Thread1 开始执行</span><br><span class="line">Thread2 睡眠10ms</span><br><span class="line">Thread2 开始执行</span><br><span class="line">Thread2 执行完毕</span><br><span class="line">Thread1 执行完毕</span><br></pre></td></tr></table></figure>
 <p>　　我们在主线程中启动了两个线程，Thread1、Thread2。在Thread1中，通过synchronized的同步方法块中，使用<code>wait()</code>方法，需要注意锁的是<code>类对象</code>。在Thread2中，同样通过synchronized的同步方法块锁住<code>类对象</code>，之后调用了<code>notify()</code>方法，接着调用了<code>sleep()</code>方法。通过执行结果，我们可以发现Thread1遇到<code>wait()</code>方法之后，释放了类锁。因为Thread2使用的是同一把类锁，只有Thread1释放类锁，Thread2才能得到。Thread2在调用<code>notify()</code>方法后，此时Thread1 处于竞争锁的状态。Thread2调用了<code>sleep()</code>方法，在执行完毕后，Thread1才继续执行，说明Thread1在Thread2执行完毕之后才获得了锁。因此，在Thread1执行<code>sleep()</code>方法时，没有释放锁。</p>
 <h2 id="3-参考"><a href="#3-参考" class="headerlink" title="3 参考"></a>3 参考</h2><ol>
-<li><a href="https://blog.csdn.net/u012050154/article/details/50903326" target="_blank" rel="noopener">https://blog.csdn.net/u012050154/article/details/50903326</a>       Java中sleep()与wait()区别</li>
-<li><a href="https://www.zhihu.com/question/23328075" target="_blank" rel="noopener">https://www.zhihu.com/question/23328075</a>   java sleep和wait的区别的疑惑?</li>
+<li><a href="https://blog.csdn.net/u012050154/article/details/50903326">https://blog.csdn.net/u012050154/article/details/50903326</a>       Java中sleep()与wait()区别</li>
+<li><a href="https://www.zhihu.com/question/23328075">https://www.zhihu.com/question/23328075</a>   java sleep和wait的区别的疑惑?</li>
 </ol>
 
         </div>
@@ -359,37 +366,9 @@
         <div class="level is-mobile">
             
             <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Github" href="https://github.com/ppoffice">
+                title="Github" href="https://github.com/yumengh">
                 
                 <i class="fab fa-github"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Facebook" href="https://facebook.com">
-                
-                <i class="fab fa-facebook"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Twitter" href="https://twitter.com">
-                
-                <i class="fab fa-twitter"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Dribbble" href="https://dribbble.com">
-                
-                <i class="fab fa-dribbble"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="RSS" href="/">
-                
-                <i class="fas fa-rss"></i>
                 
             </a>
             
@@ -456,23 +435,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
-                        
-                        <i class="fab fa-creative-commons"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
-                        
-                        <i class="fab fa-creative-commons-by"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
                         
                         <i class="fab fa-github"></i>
                         

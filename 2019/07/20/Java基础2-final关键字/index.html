@@ -10,20 +10,20 @@
 <title>Java基础2 final关键字 - 海阔天空的博客</title>
 
 
-    <meta name="description" content="在进行Java编程的时候，我们通常会使用final修饰那些不想改变的数据，这样往往出于效率、设计的目的。final可以修饰类、方法、属性。 1 修饰类　　final修饰的类，不能被继承。 1234567891011public class FinalTest &amp;#123;    //父类    public final class SuperClass &amp;#123;        public">
+    <meta name="description" content="在进行Java编程的时候，我们通常会使用final修饰那些不想改变的数据，这样往往出于效率、设计的目的。final可以修饰类、方法、属性。">
 <meta name="keywords" content="Java,基础">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java基础2 final关键字">
 <meta property="og:url" content="http://yoursite.com/2019/07/20/Java基础2-final关键字/index.html">
 <meta property="og:site_name" content="海阔天空的博客">
-<meta property="og:description" content="在进行Java编程的时候，我们通常会使用final修饰那些不想改变的数据，这样往往出于效率、设计的目的。final可以修饰类、方法、属性。 1 修饰类　　final修饰的类，不能被继承。 1234567891011public class FinalTest &amp;#123;    //父类    public final class SuperClass &amp;#123;        public">
+<meta property="og:description" content="在进行Java编程的时候，我们通常会使用final修饰那些不想改变的数据，这样往往出于效率、设计的目的。final可以修饰类、方法、属性。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-07-20T09:36:03.655Z">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg">
+<meta property="og:updated_time" content="2020-01-11T16:41:51.769Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java基础2 final关键字">
-<meta name="twitter:description" content="在进行Java编程的时候，我们通常会使用final修饰那些不想改变的数据，这样往往出于效率、设计的目的。final可以修饰类、方法、属性。 1 修饰类　　final修饰的类，不能被继承。 1234567891011public class FinalTest &amp;#123;    //父类    public final class SuperClass &amp;#123;        public">
-<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
+<meta name="twitter:description" content="在进行Java编程的时候，我们通常会使用final修饰那些不想改变的数据，这样往往出于效率、设计的目的。final可以修饰类、方法、属性。">
+<meta name="twitter:image" content="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg">
 
 
 
@@ -129,6 +129,12 @@
                 <div class="column is-8-tablet is-9-desktop is-9-widescreen has-order-2 column-main">
 <div class="card">
     
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/01/12/3Sq1EYJleujiok5.jpg" alt="Java基础2 final关键字">
+        </span>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -139,7 +145,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1142 个字)
+                    8 分钟 读完 (大约 1143 个字)
                 </span>
                 
                 
@@ -153,6 +159,7 @@
         </h1>
         <div class="content">
             <p>　　在进行Java编程的时候，我们通常会使用final修饰那些不想改变的数据，这样往往出于效率、设计的目的。<code>final</code>可以修饰类、方法、属性。</p>
+ <a id="more"></a> 
 <h2 id="1-修饰类"><a href="#1-修饰类" class="headerlink" title="1 修饰类"></a>1 修饰类</h2><p>　　<code>final</code>修饰的类，不能被继承。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FinalTest</span> </span>&#123;</span><br><span class="line">    <span class="comment">//父类</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">SuperClass</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SuperClass</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//报错：final修饰的类不能被继承。</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">SubClass</span> <span class="keyword">extends</span> <span class="title">SuperClass</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>报错信息：</p>
@@ -182,9 +189,9 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FinalTest2</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//声明时直接初始化</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构造函数赋值（在构造代码块之后执行）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> j;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//静态代码块中赋值（先于构造代码块执行）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> k;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构造代码块中赋值（先于构造函数执行）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> m;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//正确</span></span><br><span class="line"><span class="comment">//    public FinalTest2(int j) &#123;</span></span><br><span class="line"><span class="comment">//        this.j = j;</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//正确</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FinalTest2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.j = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//静态代码块</span></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        k = <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构造代码块</span></span><br><span class="line">    &#123;</span><br><span class="line">        m = <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        FinalTest2 n = <span class="keyword">new</span> FinalTest2();</span><br><span class="line">        System.out.println(<span class="string">"声明时直接初始化的i值为"</span>+i);</span><br><span class="line">        System.out.println(<span class="string">"构造函数赋值的j值为"</span>+n.j);</span><br><span class="line">        System.out.println(<span class="string">"静态代码块赋值的k值为"</span>+k);</span><br><span class="line">        System.out.println(<span class="string">"构造代码块赋值的m值为"</span>+n.m);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">声明时直接初始化的i值为0</span><br><span class="line">构造函数赋值的j值为1</span><br><span class="line">静态代码块赋值的k值为2</span><br><span class="line">构造代码块赋值的m值为3</span><br></pre></td></tr></table></figure>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://zhuanlan.zhihu.com/p/33083924" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/33083924</a> 深入浅出Java final关键字</li>
-<li><a href="https://www.cnblogs.com/dolphin0520/p/3736238.html" target="_blank" rel="noopener">https://www.cnblogs.com/dolphin0520/p/3736238.html</a> 浅析Java中的final关键字</li>
-<li><a href="https://blog.csdn.net/u010002184/article/details/81347110" target="_blank" rel="noopener">https://blog.csdn.net/u010002184/article/details/81347110</a>  java,final变量初始化方式 </li>
+<li><a href="https://zhuanlan.zhihu.com/p/33083924">https://zhuanlan.zhihu.com/p/33083924</a> 深入浅出Java final关键字</li>
+<li><a href="https://www.cnblogs.com/dolphin0520/p/3736238.html">https://www.cnblogs.com/dolphin0520/p/3736238.html</a> 浅析Java中的final关键字</li>
+<li><a href="https://blog.csdn.net/u010002184/article/details/81347110">https://blog.csdn.net/u010002184/article/details/81347110</a>  java,final变量初始化方式 </li>
 </ol>
 
         </div>
@@ -374,37 +381,9 @@
         <div class="level is-mobile">
             
             <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Github" href="https://github.com/ppoffice">
+                title="Github" href="https://github.com/yumengh">
                 
                 <i class="fab fa-github"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Facebook" href="https://facebook.com">
-                
-                <i class="fab fa-facebook"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Twitter" href="https://twitter.com">
-                
-                <i class="fab fa-twitter"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="Dribbble" href="https://dribbble.com">
-                
-                <i class="fab fa-dribbble"></i>
-                
-            </a>
-            
-            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
-                title="RSS" href="/">
-                
-                <i class="fas fa-rss"></i>
                 
             </a>
             
@@ -487,23 +466,7 @@
                 <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
-                        
-                        <i class="fab fa-creative-commons"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
-                        
-                        <i class="fab fa-creative-commons-by"></i>
-                        
-                    </a>
-                </p>
-                
-                <p class="control">
-                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
                         
                         <i class="fab fa-github"></i>
                         
