@@ -187,6 +187,16 @@
 <h2 id="七、索引建立的原则"><a href="#七、索引建立的原则" class="headerlink" title="七、索引建立的原则"></a><strong>七、索引建立的原则</strong></h2><p>　　1. 在经常用作过滤器的字段上建立索引；<br>　　2. 在SQL语句中经常进行GROUP BY、ORDER BY的字段上建立索引；<br>　　3. 在不同值较少的字段上不必要建立索引，如性别字段；<br>　　4. 对于经常存取的列避免建立索引；<br>　　5. 用于联接的列（主健/外健）上建立索引；<br>　　6. 在经常存取的多个列上建立复合索引，但要注意复合索引的建立顺序要按照使用的频度来确定；<br>　　7. 缺省情况下建立的是非簇集索引，但在以下情况下最好考虑簇集索引，如：含有有限数目（不是很少）唯一的列；进行大范围的查询；充分的利用索引可以减少表扫描I/0的次数，有效的避免对整表的搜索。当然合理的索引要建立在对各种查询的分析和预测中，也取决于DBA的所设计的数据库结构。</p>
 
         </div>
+		
+            <ul class="post-copyright">
+            <li><strong>本文标题：</strong><a href="http://yoursite.com/2019/06/28/数据库2-索引/">数据库2 索引</a></li>
+            <li><strong>本文作者：</strong><a href="http://yoursite.com">Yu Meng</a></li>
+            <li><strong>本文链接：</strong><a href="http://yoursite.com/2019/06/28/数据库2-索引/">http://yoursite.com/2019/06/28/数据库2-索引/</a></li>
+            <li><strong>发布时间：</strong>2019-06-28</li>
+            <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+            </li>
+            </ul>
+        
         
 		<hr style="height:1px;margin:1rem 0"/>
         <div class="level is-size-7 is-uppercase">
