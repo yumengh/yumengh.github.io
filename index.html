@@ -137,7 +137,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    12 分钟 读完 (大约 1771 个字)
+                    12 分钟 读完 (大约 1772 个字)
                 </span>
                 
                 
@@ -151,83 +151,26 @@
         </h1>
         <div class="content">
             <p>Java的传递类型究竟是值传递还是引用传递，相信大多数小伙伴们都很迷惑，也许有小伙伴知道是值传递，但是不不知道怎么说明。同时这也是一个很经典的面试题，打开文章的你也遇到过吧。</p>
-<p>话不多说，先说结论：</p>
-<hr>
-<p><strong>Java严格按照值传递。</strong></p>
-<hr>
-<h2 id="值传递与引用传递"><a href="#值传递与引用传递" class="headerlink" title="值传递与引用传递"></a>值传递与引用传递</h2><blockquote>
-<p> <strong>值传递</strong>: 在函数调用的过程中，将实参复制一份给形参，在函数中执行的对象是形参。</p>
-</blockquote>
-<blockquote>
-<p> <strong>引用传递</strong>: 在函数调用的过程中，将实参的地址传递到函数中，在函数中执行的对象是真实的实参。</p>
-</blockquote>
-<p>首先，我们先弄明白什么值传递和引用传递的具体含义。</p>
-<p>值传递，是将我们传递给函数的对象进行复制，而真正传递进函数的是复制的对象，而不是我们传递给函数的对象，所以我们在函数内对于对象的修改，不会影响我们传递给函数的对象(实参)，只会影响形参。</p>
-<p>引用传递，是将我们传递给函数的对象的地址传递到函数里面，如果我们在函数中，对对象进行了修改，是会影响我们传递给函数的对象(实参)的。</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>值传递</th>
-<th>引用传递</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>根本区别</td>
-<td>会创建副本</td>
-<td>不会创建副本</td>
-</tr>
-<tr>
-<td>表现</td>
-<td>函数无法改变原始对象</td>
-<td>函数可以改变原始对象</td>
-</tr>
-</tbody>
-</table>
-<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><p>我们可以根据传递给函数的对象的不同，分别演示基本数据类型和引用数据类型的对象</p>
-<h3 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h3><p>基本数据类型演示代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class ShowCode &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int a = 1;</span><br><span class="line">        int b = 2;</span><br><span class="line">        swap(a, b);</span><br><span class="line">        System.out.println(&quot;print in main, a = &quot; + a + &quot;, b = &quot; + b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void swap(int a, int b) &#123;</span><br><span class="line">        int temp = a;</span><br><span class="line">        a = b;</span><br><span class="line">        b = temp;</span><br><span class="line">        System.out.println(&quot;print in swap, a = &quot; + a + &quot;, b = &quot; + b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码的执行结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print in swap, a = 2, b = 1</span><br><span class="line">print in main, a = 1, b = 2</span><br></pre></td></tr></table></figure>
-<p>对于这段代码的演示结果，相信屏幕前的你很清楚。当传递参数是基本数据类型的时候，实际传递的参数的副本，所以在<code>swap</code>函数中，对于对象的修改不会影响实际的对象。</p>
-<h3 id="引用数据类型"><a href="#引用数据类型" class="headerlink" title="引用数据类型"></a>引用数据类型</h3><p>引用类型演示代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class Balloon &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    private String color;</span><br><span class="line"></span><br><span class="line">    public Balloon(String name, String color) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.color = color;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getColor() &#123;</span><br><span class="line">        return color;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setColor(String color) &#123;</span><br><span class="line">        this.color = color;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public class PassMain &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Balloon red = new Balloon(&quot;Red Balloon&quot;, &quot;Red&quot;);</span><br><span class="line">        Balloon blue = new Balloon(&quot;Blue Balloon&quot;, &quot;Blue&quot;);</span><br><span class="line">        Balloon yellow = new Balloon(&quot;Yellow Balloon&quot;, &quot;Yellow&quot;);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;=============  1  ===============&quot;);</span><br><span class="line">        swap(red, blue);</span><br><span class="line">        System.out.println(&quot;Red Balloon color is &quot; + red.getColor());</span><br><span class="line">        System.out.println(&quot;Blue Balloon color is &quot; + blue.getColor());</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;=============  2  ===============&quot;);</span><br><span class="line">        swap2(red, blue);</span><br><span class="line">        System.out.println(&quot;Red Balloon color is &quot; + red.getColor());</span><br><span class="line">        System.out.println(&quot;Blue Balloon color is &quot; + blue.getColor());</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;=============  3  ===============&quot;);</span><br><span class="line">        paint(yellow);</span><br><span class="line">        System.out.println(&quot;Yellow Balloon color is &quot; + yellow.getColor());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void swap(Object o1, Object o2) &#123;</span><br><span class="line">        Object temp = o1;</span><br><span class="line">        o1 = o2;</span><br><span class="line">        o2 = temp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void swap2(Balloon o1, Balloon o2) &#123;</span><br><span class="line">        String temp = o1.getColor();</span><br><span class="line">        o1.setColor(o2.getColor());</span><br><span class="line">        o2.setColor(temp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void paint(Balloon balloon) &#123;</span><br><span class="line">        balloon.setColor(&quot;Black&quot;);</span><br><span class="line">        balloon = new Balloon(&quot;Green Balloon&quot;,&quot;Green&quot;);</span><br><span class="line">        balloon.setColor(&quot;White&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码执行结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">=============  1  ===============</span><br><span class="line">Red Balloon color is Red</span><br><span class="line">Blue Balloon color is Blue</span><br><span class="line">=============  2  ===============</span><br><span class="line">Red Balloon color is Blue</span><br><span class="line">Blue Balloon color is Red</span><br><span class="line">=============  3  ===============</span><br><span class="line">Yellow Balloon color is Black</span><br></pre></td></tr></table></figure>
-<p>对于这段代码的结果，屏幕面前的你，有没有感觉有点转不过来。哈哈，听我细细道来。</p>
-<p>在<code>swap</code>函数中，交换了两个引用数据类型的对象，实际对象没有变化。</p>
-<p>在<code>swap2</code>函数中，交换了两个引用数据类型的对象的颜色，实际对象却发生了变化。</p>
-<p>在<code>paint</code>函数中，对引用数据类型的对象的颜色，实际对象发生了变化。</p>
-<h2 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h2><p><strong>对于值传递，无论是值类型还是引用类型，都会在调用栈上创建一个副本，不同是，对于值类型而言，这个副本就是整个原始值的复制。而对于引用类型而言，由于引用类型的实例在堆中，在栈上只有它的一个引用（一般情况下是指针），其副本也只是这个引用的复制，而不是整个原始对象的复制。</strong></p>
-<h3 id="基本数据类型-1"><a href="#基本数据类型-1" class="headerlink" title="基本数据类型"></a>基本数据类型</h3><p>在基本数据类型的代码演示中，根据对象在<code>JVM</code>的分布情况，我们可以知道基本数据类型在栈的分布情况。在基本数据类型对象传递给函数时，会在栈内复制一份，即为形参<code>a</code>，<code>b</code>，在<code>swap</code>函数执行之后，在栈内的分布情况，即变为形参<code>a</code>的值变为2，形参<code>b</code>的值变为1，虽然形参发生了变化，但是实参却没有变化。</p>
-<p><img src="https://i.loli.net/2020/03/04/5qVQW2YAC8r34hX.png" alt="Java基本数据类型传递.png"></p>
-<h3 id="引用数据类型-1"><a href="#引用数据类型-1" class="headerlink" title="引用数据类型"></a>引用数据类型</h3><p>在引用数据类型的代码演示中，对于<code>swap</code>函数，<code>o1</code>、<code>o2</code>分别为<code>red</code>、<code>blue</code>的副本，<code>o1</code>、<code>o2</code>分别指向<code>Red Balloon</code>、<code>Blue Balloon</code>对象。在<code>swap</code>函数执行之后<code>o1</code>、<code>o2</code>分别指向<code>Blue Balloon</code>、<code>Red Balloon</code>对象，即指向的对象发生了变化。</p>
-<hr>
-<p><code>swap</code>函数执行前</p>
-<p><img src="https://i.loli.net/2020/03/04/Yoxdyf5SbKGNWTX.png" alt="swap函数执行前.png"></p>
-<p><code>swap</code>函数执行后</p>
-<p><img src="https://i.loli.net/2020/03/04/k9NyISYAWfjwroE.png" alt="swap函数执行后.png"></p>
-<hr>
-<p>对于<code>swap2</code>函数，<code>o1</code>、<code>o2</code>分别为<code>red</code>、<code>blue</code>的副本，<code>o1</code>、<code>o2</code>分别指向<code>Red Balloon</code>、<code>Blue Balloon</code>对象。在<code>swap2</code>函数执行之后<code>o1</code>、<code>o2</code>分别指向对象的颜色发生变化，即指向的对象发生了变化。</p>
-<hr>
-<p><code>swap2</code>函数执行前</p>
-<p><img src="https://i.loli.net/2020/03/04/Yoxdyf5SbKGNWTX.png" alt="swap2函数执行前前.png"></p>
-<p><code>swap2</code>函数执行后</p>
-<p><img src="https://i.loli.net/2020/03/04/8d192sMDAiVGNuL.png" alt="swap2函数执行后.png"></p>
-<hr>
-<p>对于<code>paint</code>函数，<code>ballon</code>分别为<code>yellow</code>的副本，<code>ballon</code>、<code>yellow</code>都指向<code>Yellow Balloon</code>对象。在<code>paint</code>函数执行之后<code>yellow</code>先改变了<code>Yellow Balloon</code>对象的颜色，之后指向了<code>Green Balloon</code>对象，最后又改变<code>Green Balloon</code>对象的颜色为白色。</p>
-<p><img src="https://i.loli.net/2020/03/04/ZRgjO8DHM1xCy5h.png" alt="paint函数执行前后.png"></p>
-<hr>
-<p>最后我们可以知道，无论是基本数据类型还是引用数据类型的对象，Java都是值传递。</p>
-<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class StringTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String name = &quot;Hello Java&quot;;</span><br><span class="line">        passStr(name);</span><br><span class="line">        System.out.println(&quot;name ==&quot; + name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void passStr(String str) &#123;</span><br><span class="line">        str = &quot;Hello World&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>读到这里，预测一下最后打印的是<code>Hello Java</code>还是<code>Hello　World</code>？</p>
-<p>最后结果是<code>Hello Java</code>，你猜对了没有？其实想知道结果，只需要知<code>str = &quot;Hello World&quot;</code>和<code>str = new String(&quot;Hello World&quot;)</code>是等价的。剩下的内容，根据我们前面的分析，就可以知道了。</p>
-
         </div>
 		
         
+        
+        <hr style="height:1px;margin:1rem 0"/>
+		<div class="level is-mobile is-flex">
+			<div class="level-start">
+				
+				<div class="level-item is-size-7 is-uppercase">
+					<i class="fas fa-tags has-text-grey"></i>&nbsp;
+					<a class="has-link-grey -link" href="/tags/图解/">图解</a>
+				</div>
+				
+			</div>
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/03/04/图解Java传递类型/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
