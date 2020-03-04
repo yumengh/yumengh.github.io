@@ -14,23 +14,6 @@ select,
 textarea {
   font-family: "Ubuntu", "Roboto", "Open Sans", "Microsoft YaHei", sans-serif;
 }
-@media screen and (min-width: 1280px) {
-  .is-1-column .container,
-  .is-2-column .container {
-    max-width: 960px;
-    width: 960px;
-  }
-}
-@media screen and (min-width: 1472px) {
-  .is-2-column .container {
-    max-width: 1152px;
-    width: 1152px;
-  }
-  .is-1-column .container {
-    max-width: 960px;
-    width: 960px;
-  }
-}
 @media screen and (max-width: 768px) {
   .section {
     padding: 1.5rem 1rem;
@@ -536,4 +519,13 @@ figure.highlight .section {
 }
 .gist .file {
   all: initial;
+}
+.post-copyright {
+  font-size: 1rem;
+  letter-spacing: 0.02rem;
+  word-break: break-all;
+  margin: 2.5rem 0 0;
+  padding: 1rem 1rem;
+  border-left: 3px solid #ff1700;
+  background-color: #f9f9f9;
 }

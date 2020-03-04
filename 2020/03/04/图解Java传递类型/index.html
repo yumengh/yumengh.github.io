@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.8.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>图解Java传递类型 - 海阔天空的博客</title>
+
+
+    <meta name="description" content="Java的传递类型究竟是值传递还是引用传递，相信大多数小伙伴们都很迷惑，也许有小伙伴知道是值传递，但是不不知道怎么说明。同时这也是一个很经典的面试题，打开文章的你也遇到过吧。 话不多说，先说结论：  Java严格按照值传递。  值传递与引用传递  值传递: 在函数调用的过程中，将实参复制一份给形参，在函数中执行的对象是形参。    引用传递: 在函数调用的过程中，将实参的地址传递到函数中，在函数中">
+<meta name="keywords" content="图解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图解Java传递类型">
+<meta property="og:url" content="http://yoursite.com/2020/03/04/图解Java传递类型/index.html">
+<meta property="og:site_name" content="海阔天空的博客">
+<meta property="og:description" content="Java的传递类型究竟是值传递还是引用传递，相信大多数小伙伴们都很迷惑，也许有小伙伴知道是值传递，但是不不知道怎么说明。同时这也是一个很经典的面试题，打开文章的你也遇到过吧。 话不多说，先说结论：  Java严格按照值传递。  值传递与引用传递  值传递: 在函数调用的过程中，将实参复制一份给形参，在函数中执行的对象是形参。    引用传递: 在函数调用的过程中，将实参的地址传递到函数中，在函数中">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2020/03/04/l7rZzb12otEGqgH.jpg">
+<meta property="og:updated_time" content="2020-03-04T15:08:34.339Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图解Java传递类型">
+<meta name="twitter:description" content="Java的传递类型究竟是值传递还是引用传递，相信大多数小伙伴们都很迷惑，也许有小伙伴知道是值传递，但是不不知道怎么说明。同时这也是一个很经典的面试题，打开文章的你也遇到过吧。 话不多说，先说结论：  Java严格按照值传递。  值传递与引用传递  值传递: 在函数调用的过程中，将实参复制一份给形参，在函数中执行的对象是形参。    引用传递: 在函数调用的过程中，将实参的地址传递到函数中，在函数中">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/04/l7rZzb12otEGqgH.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                海阔天空
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-9-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/03/04/l7rZzb12otEGqgH.jpg" alt="图解Java传递类型">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-04T15:04:20.000Z">2020-03-04</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1771 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                图解Java传递类型
+            
+        </h1>
+        <div class="content">
+            <p>Java的传递类型究竟是值传递还是引用传递，相信大多数小伙伴们都很迷惑，也许有小伙伴知道是值传递，但是不不知道怎么说明。同时这也是一个很经典的面试题，打开文章的你也遇到过吧。</p>
+<p>话不多说，先说结论：</p>
+<hr>
+<p><strong>Java严格按照值传递。</strong></p>
+<hr>
+<h2 id="值传递与引用传递"><a href="#值传递与引用传递" class="headerlink" title="值传递与引用传递"></a>值传递与引用传递</h2><blockquote>
+<p> <strong>值传递</strong>: 在函数调用的过程中，将实参复制一份给形参，在函数中执行的对象是形参。</p>
+</blockquote>
+<blockquote>
+<p> <strong>引用传递</strong>: 在函数调用的过程中，将实参的地址传递到函数中，在函数中执行的对象是真实的实参。</p>
+</blockquote>
+<p>首先，我们先弄明白什么值传递和引用传递的具体含义。</p>
+<p>值传递，是将我们传递给函数的对象进行复制，而真正传递进函数的是复制的对象，而不是我们传递给函数的对象，所以我们在函数内对于对象的修改，不会影响我们传递给函数的对象(实参)，只会影响形参。</p>
+<p>引用传递，是将我们传递给函数的对象的地址传递到函数里面，如果我们在函数中，对对象进行了修改，是会影响我们传递给函数的对象(实参)的。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>值传递</th>
+<th>引用传递</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>根本区别</td>
+<td>会创建副本</td>
+<td>不会创建副本</td>
+</tr>
+<tr>
+<td>表现</td>
+<td>函数无法改变原始对象</td>
+<td>函数可以改变原始对象</td>
+</tr>
+</tbody>
+</table>
+<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><p>我们可以根据传递给函数的对象的不同，分别演示基本数据类型和引用数据类型的对象</p>
+<h3 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h3><p>基本数据类型演示代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class ShowCode &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int a = 1;</span><br><span class="line">        int b = 2;</span><br><span class="line">        swap(a, b);</span><br><span class="line">        System.out.println(&quot;print in main, a = &quot; + a + &quot;, b = &quot; + b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void swap(int a, int b) &#123;</span><br><span class="line">        int temp = a;</span><br><span class="line">        a = b;</span><br><span class="line">        b = temp;</span><br><span class="line">        System.out.println(&quot;print in swap, a = &quot; + a + &quot;, b = &quot; + b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码的执行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print in swap, a = 2, b = 1</span><br><span class="line">print in main, a = 1, b = 2</span><br></pre></td></tr></table></figure>
+<p>对于这段代码的演示结果，相信屏幕前的你很清楚。当传递参数是基本数据类型的时候，实际传递的参数的副本，所以在<code>swap</code>函数中，对于对象的修改不会影响实际的对象。</p>
+<h3 id="引用数据类型"><a href="#引用数据类型" class="headerlink" title="引用数据类型"></a>引用数据类型</h3><p>引用类型演示代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class Balloon &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    private String color;</span><br><span class="line"></span><br><span class="line">    public Balloon(String name, String color) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.color = color;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getColor() &#123;</span><br><span class="line">        return color;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setColor(String color) &#123;</span><br><span class="line">        this.color = color;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public class PassMain &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Balloon red = new Balloon(&quot;Red Balloon&quot;, &quot;Red&quot;);</span><br><span class="line">        Balloon blue = new Balloon(&quot;Blue Balloon&quot;, &quot;Blue&quot;);</span><br><span class="line">        Balloon yellow = new Balloon(&quot;Yellow Balloon&quot;, &quot;Yellow&quot;);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;=============  1  ===============&quot;);</span><br><span class="line">        swap(red, blue);</span><br><span class="line">        System.out.println(&quot;Red Balloon color is &quot; + red.getColor());</span><br><span class="line">        System.out.println(&quot;Blue Balloon color is &quot; + blue.getColor());</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;=============  2  ===============&quot;);</span><br><span class="line">        swap2(red, blue);</span><br><span class="line">        System.out.println(&quot;Red Balloon color is &quot; + red.getColor());</span><br><span class="line">        System.out.println(&quot;Blue Balloon color is &quot; + blue.getColor());</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;=============  3  ===============&quot;);</span><br><span class="line">        paint(yellow);</span><br><span class="line">        System.out.println(&quot;Yellow Balloon color is &quot; + yellow.getColor());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void swap(Object o1, Object o2) &#123;</span><br><span class="line">        Object temp = o1;</span><br><span class="line">        o1 = o2;</span><br><span class="line">        o2 = temp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void swap2(Balloon o1, Balloon o2) &#123;</span><br><span class="line">        String temp = o1.getColor();</span><br><span class="line">        o1.setColor(o2.getColor());</span><br><span class="line">        o2.setColor(temp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void paint(Balloon balloon) &#123;</span><br><span class="line">        balloon.setColor(&quot;Black&quot;);</span><br><span class="line">        balloon = new Balloon(&quot;Green Balloon&quot;,&quot;Green&quot;);</span><br><span class="line">        balloon.setColor(&quot;White&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码执行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">=============  1  ===============</span><br><span class="line">Red Balloon color is Red</span><br><span class="line">Blue Balloon color is Blue</span><br><span class="line">=============  2  ===============</span><br><span class="line">Red Balloon color is Blue</span><br><span class="line">Blue Balloon color is Red</span><br><span class="line">=============  3  ===============</span><br><span class="line">Yellow Balloon color is Black</span><br></pre></td></tr></table></figure>
+<p>对于这段代码的结果，屏幕面前的你，有没有感觉有点转不过来。哈哈，听我细细道来。</p>
+<p>在<code>swap</code>函数中，交换了两个引用数据类型的对象，实际对象没有变化。</p>
+<p>在<code>swap2</code>函数中，交换了两个引用数据类型的对象的颜色，实际对象却发生了变化。</p>
+<p>在<code>paint</code>函数中，对引用数据类型的对象的颜色，实际对象发生了变化。</p>
+<h2 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h2><p><strong>对于值传递，无论是值类型还是引用类型，都会在调用栈上创建一个副本，不同是，对于值类型而言，这个副本就是整个原始值的复制。而对于引用类型而言，由于引用类型的实例在堆中，在栈上只有它的一个引用（一般情况下是指针），其副本也只是这个引用的复制，而不是整个原始对象的复制。</strong></p>
+<h3 id="基本数据类型-1"><a href="#基本数据类型-1" class="headerlink" title="基本数据类型"></a>基本数据类型</h3><p>在基本数据类型的代码演示中，根据对象在<code>JVM</code>的分布情况，我们可以知道基本数据类型在栈的分布情况。在基本数据类型对象传递给函数时，会在栈内复制一份，即为形参<code>a</code>，<code>b</code>，在<code>swap</code>函数执行之后，在栈内的分布情况，即变为形参<code>a</code>的值变为2，形参<code>b</code>的值变为1，虽然形参发生了变化，但是实参却没有变化。</p>
+<p><img src="https://i.loli.net/2020/03/04/5qVQW2YAC8r34hX.png" alt="Java基本数据类型传递.png"></p>
+<h3 id="引用数据类型-1"><a href="#引用数据类型-1" class="headerlink" title="引用数据类型"></a>引用数据类型</h3><p>在引用数据类型的代码演示中，对于<code>swap</code>函数，<code>o1</code>、<code>o2</code>分别为<code>red</code>、<code>blue</code>的副本，<code>o1</code>、<code>o2</code>分别指向<code>Red Balloon</code>、<code>Blue Balloon</code>对象。在<code>swap</code>函数执行之后<code>o1</code>、<code>o2</code>分别指向<code>Blue Balloon</code>、<code>Red Balloon</code>对象，即指向的对象发生了变化。</p>
+<hr>
+<p><code>swap</code>函数执行前</p>
+<p><img src="https://i.loli.net/2020/03/04/Yoxdyf5SbKGNWTX.png" alt="swap函数执行前.png"></p>
+<p><code>swap</code>函数执行后</p>
+<p><img src="https://i.loli.net/2020/03/04/k9NyISYAWfjwroE.png" alt="swap函数执行后.png"></p>
+<hr>
+<p>对于<code>swap2</code>函数，<code>o1</code>、<code>o2</code>分别为<code>red</code>、<code>blue</code>的副本，<code>o1</code>、<code>o2</code>分别指向<code>Red Balloon</code>、<code>Blue Balloon</code>对象。在<code>swap2</code>函数执行之后<code>o1</code>、<code>o2</code>分别指向对象的颜色发生变化，即指向的对象发生了变化。</p>
+<hr>
+<p><code>swap2</code>函数执行前</p>
+<p><img src="https://i.loli.net/2020/03/04/Yoxdyf5SbKGNWTX.png" alt="swap2函数执行前前.png"></p>
+<p><code>swap2</code>函数执行后</p>
+<p><img src="https://i.loli.net/2020/03/04/8d192sMDAiVGNuL.png" alt="swap2函数执行后.png"></p>
+<hr>
+<p>对于<code>paint</code>函数，<code>ballon</code>分别为<code>yellow</code>的副本，<code>ballon</code>、<code>yellow</code>都指向<code>Yellow Balloon</code>对象。在<code>paint</code>函数执行之后<code>yellow</code>先改变了<code>Yellow Balloon</code>对象的颜色，之后指向了<code>Green Balloon</code>对象，最后又改变<code>Green Balloon</code>对象的颜色为白色。</p>
+<p><img src="https://i.loli.net/2020/03/04/ZRgjO8DHM1xCy5h.png" alt="paint函数执行前后.png"></p>
+<hr>
+<p>最后我们可以知道，无论是基本数据类型还是引用数据类型的对象，Java都是值传递。</p>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class StringTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String name = &quot;Hello Java&quot;;</span><br><span class="line">        passStr(name);</span><br><span class="line">        System.out.println(&quot;name ==&quot; + name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void passStr(String str) &#123;</span><br><span class="line">        str = &quot;Hello World&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>读到这里，预测一下最后打印的是<code>Hello Java</code>还是<code>Hello　World</code>？</p>
+<p>最后结果是<code>Hello Java</code>，你猜对了没有？其实想知道结果，只需要知<code>str = &quot;Hello World&quot;</code>和<code>str = new String(&quot;Hello World&quot;)</code>是等价的。剩下的内容，根据我们前面的分析，就可以知道了。</p>
+
+        </div>
+		
+            <ul class="post-copyright">
+            <li><strong>本文标题：</strong><a href="http://yoursite.com/2020/03/04/图解Java传递类型/">图解Java传递类型</a></li>
+            <li><strong>本文作者：</strong><a href="http://yoursite.com">Yu Meng</a></li>
+            <li><strong>本文链接：</strong><a href="http://yoursite.com/2020/03/04/图解Java传递类型/">http://yoursite.com/2020/03/04/图解Java传递类型/</a></li>
+            <li><strong>发布时间：</strong>2020-03-04</li>
+            <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+            </li>
+            </ul>
+        
+        
+		<hr style="height:1px;margin:1rem 0"/>
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <i class="fas fa-tags has-text-grey"></i>&nbsp;
+                    <a class="has-link-grey -link" href="/tags/图解/">图解</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/12/20/RocketMQ介绍-md/">
+                <span class="level-item">RocketMQ介绍.md</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'e347e685e5a40af64146',
+        clientSecret: '414da2f1813e1f8f91a13363ce80f15af7e0d1f0',
+        id: 'd4febc7f90b77226ac82464904c3522a',
+        repo: 'comment',
+        owner: 'yumengh',
+        admin: "yumengh",
+        createIssueManually: false,
+        distractionFreeMode: false
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-3-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="https://i.loli.net/2020/01/11/H51ncg7w9ihSAEM.jpg" alt="海阔天空">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        海阔天空
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Coder
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            0
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            14
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/yumengh">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget column-left is-sticky" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#值传递与引用传递">
+        <span class="has-mr-6">1</span>
+        <span>值传递与引用传递</span>
+        </a></li><li>
+        <a class="is-flex" href="#代码演示">
+        <span class="has-mr-6">2</span>
+        <span>代码演示</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#基本数据类型">
+        <span class="has-mr-6">2.1</span>
+        <span>基本数据类型</span>
+        </a></li><li>
+        <a class="is-flex" href="#引用数据类型">
+        <span class="has-mr-6">2.2</span>
+        <span>引用数据类型</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#底层原理">
+        <span class="has-mr-6">3</span>
+        <span>底层原理</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#基本数据类型-1">
+        <span class="has-mr-6">3.1</span>
+        <span>基本数据类型</span>
+        </a></li><li>
+        <a class="is-flex" href="#引用数据类型-1">
+        <span class="has-mr-6">3.2</span>
+        <span>引用数据类型</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#思考题">
+        <span class="has-mr-6">4</span>
+        <span>思考题</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    海阔天空
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Yu Meng&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+				|  本站总访问量<span id="busuanzi_value_site_pv">span>次
+				span>
+				<span id="busuanzi_container_site_uv" class="theme-info">
+				|  本站访客数<span id="busuanzi_value_site_uv">span>人次
+				span>
+				<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">script>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://yoursite.com',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"right","width":225,"height":450},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
