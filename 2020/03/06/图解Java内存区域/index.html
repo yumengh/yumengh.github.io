@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.8.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>图解Java内存区域 - 海阔天空的博客</title>
+
+
+    <meta name="description" content="上一篇文章中，我们提到了对象在内存中的分布情况，图解Java传递类型，那么在这篇文章中，我会用比较通俗易懂的方式，讲解一下Java的内存和对象的内存分布情况。">
+<meta name="keywords" content="图解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图解Java内存区域">
+<meta property="og:url" content="http://yoursite.com/2020/03/06/图解Java内存区域/index.html">
+<meta property="og:site_name" content="海阔天空的博客">
+<meta property="og:description" content="上一篇文章中，我们提到了对象在内存中的分布情况，图解Java传递类型，那么在这篇文章中，我会用比较通俗易懂的方式，讲解一下Java的内存和对象的内存分布情况。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2020/03/06/bOeinjRQHfuXFVD.jpg">
+<meta property="og:updated_time" content="2020-03-06T09:01:45.205Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图解Java内存区域">
+<meta name="twitter:description" content="上一篇文章中，我们提到了对象在内存中的分布情况，图解Java传递类型，那么在这篇文章中，我会用比较通俗易懂的方式，讲解一下Java的内存和对象的内存分布情况。">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/06/bOeinjRQHfuXFVD.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                海阔天空
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-9-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/03/06/bOeinjRQHfuXFVD.jpg" alt="图解Java内存区域">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-06T08:49:13.000Z">2020-03-06</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    21 分钟 读完 (大约 3102 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                图解Java内存区域
+            
+        </h1>
+        <div class="content">
+            <p>上一篇文章中，我们提到了对象在内存中的分布情况，<a href="https://mp.weixin.qq.com/s/cHhc-65ulecax3vOQC09tw">图解Java传递类型</a>，那么在这篇文章中，我会用比较通俗易懂的方式，讲解一下Java的内存和对象的内存分布情况。</p>
+ <a id="more"></a> 
+<h1 id="Java内存区域"><a href="#Java内存区域" class="headerlink" title="Java内存区域"></a>Java内存区域</h1><p>## </p>
+<blockquote>
+<p>Java是一座围城，Java开发不需要像C、C++开发人员那样，维护每个对象从开始到终结的职责。因为Java虚拟机会帮助我们完成这些职责，但是一旦发生内存泄漏和溢出，就需要我们排查。</p>
+</blockquote>
+<p><img src="https://imgkr.cn-bj.ufileos.com/db134f43-ea7b-4360-8a46-8d93ab3d22ff.png" alt=""></p>
+<p>Java虚拟机执行Java程序时，把它管理的整个内存区域称为运行时数据区。同时根据区域的用途，以及创建和销毁时间等因素，将运行时数据区分成不同的区域。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/7c7a17dc-4e40-4408-a15c-ab22414bfe75.png" alt=""></p>
+<h2 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h2><p>程序计数器表示当前线程所执行字节码指令的行号计数器。字节码解释器通过改变程序计数器的值，选取下一条需要执行的指令。为了保证线程切换之后恢复到正确的执行位置，每条线程都需要独立的程序计数器，所以程序计数器是线程私有的。同时程序计数器是唯一一个在虚拟机规范中没有规定<code>OutOfMemoryError</code>的区域。</p>
+<p><em>注：线程执行Java方法，程序计数器记录字节码指令地址；如果执行的是本地(Native)方法，程序计数器为空。</em></p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/29e3a2b7-dda0-4c5b-bb70-6e81cf95b5f5.png" alt=""></p>
+<h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><p>虚拟机栈是Java方法执行的线程内存模型。每个方法的执行，Java虚拟机都会创建一个栈帧存储方法相关变量。每个方法被调用到执行完毕的过程，对应栈帧在虚拟机栈中入栈到出栈的过程。</p>
+<p>如下图所示，当虚拟机执行<code>swap(a,b)</code>方法时，会创建一个单独的栈帧<code>swap(a,b)</code>栈帧，在该栈帧中会存储于方法相关的变量，该栈帧的入栈和出栈操作对应着方法的执行和结束。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/4b8c5623-ca73-4982-9593-9ac63f5a5889.png" alt=""></p>
+<p>每个栈帧都包含了局部变量表、操作数、动态链接、方法返回值。</p>
+<ul>
+<li>局部变量表：存放方法参数和内部定义的局部变量。局部变量表的容量以变量槽为最小单位每个变量槽可以存放一个<code>boolean</code>、<code>byte</code>、<code>char</code>、<code>short</code>、<code>int</code>、<code>float</code>、<code>reference</code>、<code>returnAddress</code>数据类型。</li>
+<li>操作数栈：底层也是栈结构，是进行数据运算的地方。 <ul>
+<li>当一个方法刚刚开始执行时，其操作数栈是空的，随着方法执行和字节码指令的执行，会从局部变量表或对象实例的字段中复制常量或变量写入到操作数栈，再随着计算的进行将栈中元素出栈到局部变量表或者返回给方法调用者，也就是出栈/入栈操作。 </li>
+</ul>
+</li>
+<li>动态链接：将常量池中指向方法的部分符号引用，在方法运行期间转为直接引用。<ul>
+<li>字节码中的方法调用指令就是以常量池中指向方法的符号引用作为参数。这些符号引用一部分会在类加载阶段或第一次使用时转化为直接引用，这种转化称为静态解析。另一部分将在每一次运行期间转化为直接引用，这部分称为动态连接。 </li>
+</ul>
+</li>
+<li>返回地址：方法执行退出后，返回到方法被调用的地方。</li>
+</ul>
+<p><img src="https://imgkr.cn-bj.ufileos.com/9c6935d8-4a60-4d3f-a6ac-2f9970753dfe.png" alt=""></p>
+<p>在<code>swap</code>函数执行的过程中，<code>a</code>、<code>b</code>、<code>temp</code>都会保存到局部变量表中，其中的赋值操作则通过操作数栈执行，</p>
+<p>方法执行完毕返回到调用的地方的地址则存储在返回地址中。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/a915b71d-32d3-4654-9401-473f7735a51d.png" alt=""></p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>本地方法栈与 Java 虚拟机栈所发挥的作用是非常相似的，其区别不过是虚拟机栈为虚拟机执行 <strong>Java 方法</strong>（也就是字节码）服务，而本地方法栈则是为虚拟机使用到的 <strong>Native 方法</strong>服务。</p>
+<h3 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h3><p>Java堆是虚拟机管理的内存中最大的一块，几乎所有对象都在Java堆分配内存。Java堆在虚拟机启动的时候创建，被所有的线程共享。Java堆也会涉及到内存回收的内容，本片文章先不展开了。Java堆无法扩展时，会报出<code>OutOfMemoryError</code>异常。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/b1e04ef9-4c5b-4b14-bfe1-599ac24cca90.png" alt=""></p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>方法区存储已被虚拟机加载的类信息、常量、静态变量、即时编译后的代码缓存等数据。方法区是各个线程共享的内存区域。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/d0c98f79-f155-4e30-bc2c-14109a2eb0dd.png" alt=""></p>
+<blockquote>
+<p>屏幕面前的你，会不会遇到这样的困惑。方法区和永久代有什么关系？和元空间呢？</p>
+</blockquote>
+<ul>
+<li>方法区和永久代的关系</li>
+</ul>
+<pre><code>方法区是JVM规范概念，而永久代则是HotSpot虚拟机特有的概念。
+
+
+
+*《Java虚拟机规范》只是规定了有方法区的概念和作用，并没有规定如何去实现它。那么，在不同的 JVM 上方法区的实现肯定是不同的了。 同时大多数用的JVM都是Sun公司的HotSpot。在HotSpot上把GC分代收集扩展至方法区，或者说使用永久代来实现方法区。因此永久代是HotSpot的概念，方法区是Java虚拟机规范中的定义，是一种规范，而永久代是一种实现，一个是标准一个是实现。其他的虚拟机实现并没有永久带这一说法。在1.7之前在(JDK1.2 ~ JDK6)的实现中，HotSpot 使用永久代实现方法区，HotSpot 使用 GC分代来实现方法区内存回收，可以使用如下参数来调节方法区的大小。*
+</code></pre><ul>
+<li>元空间</li>
+</ul>
+<pre><code>对于Java8， HotSpots取消了永久代，取代永久代的就是元空间。永久代存在内存上限(`-XX:MaxPermSize`，即使不设置也有默认大小)，当进程申请不到足够的内存，会造成内存溢出。改成元空间后，改用本地内存，只要本地空间足够，就不会有内存溢出的问题。
+
+
+
+*元空间和永久代有什么不同的？*
+
+
+
+*存储位置不同，永久代物理是是堆的一部分，和新生代，老年代地址是连续的，而元空间属于本地内存；*
+
+*存储内容不同，元空间存储类的元信息，静态变量和常量池等并入堆中。相当于永久代的数据被分到了堆和元空间中。*
+</code></pre><h4 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h4><p>运行时常量池是方法区的一部分，是一块内存区域。Class 文件常量池将在类加载后进入方法区的运行时常量池中存放。<strong>一个类加载到 JVM 中后对应一个运行时常量池。</strong></p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/6b17b91b-8662-464b-8d45-b783c06baf00.png" alt=""></p>
+<h1 id="易混淆的概念"><a href="#易混淆的概念" class="headerlink" title="易混淆的概念"></a>易混淆的概念</h1><blockquote>
+<p>屏幕面前的你，会不会遇到这样的困惑。运行时常量池和Class文件常量池有什么关系？和字符串常量池呢？和缓冲池呢？</p>
+</blockquote>
+<h2 id="Class文件常量池"><a href="#Class文件常量池" class="headerlink" title="Class文件常量池"></a>Class文件常量池</h2><p>Class 文件常量池，用于存放编译期生成的各种字面量和符号引用，这部分内容将在类加载后进入方法区的运行时常量池中存放。常量池中主要存放两大类常量：字面量和符号引用。当Class文件常量池加载到方法区时，会把符号引用转换为直接引用，存放到运行时常量池。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/05b4b224-0988-429a-b2c2-6080b9a4941d.png" alt=""><br><img src="https://imgkr.cn-bj.ufileos.com/db41a72a-be8d-4da6-b3ec-31974d0f81d9.png" alt=""></p>
+<h2 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h2><p>字符串常量池是<strong>全局的，<code>JVM</code> 中独此一份</strong>，因此也称为全局字符串常量池。</p>
+<p>其中：</p>
+<p>在 <code>jdk1.6（含）</code>之前也是方法区的一部分，并且其中存放的是字符串的实例；<br>在 <code>jdk1.7（含）</code>之后是在堆内存之中，<strong>存储的是字符串对象的引用，字符串实例是在堆中；</strong></p>
+<p><strong>底层原理</strong></p>
+<p> 在<code>HotSpot VM</code>里实现线程池功能的是一个<code>StringTable</code>类，它是一个Hash表，默认值大小长度是1009；这个<code>StringTable</code>在每个<code>HotSpot VM</code>的实例只有一份，被所有的类共享。字符串常量由一个一个字符组成，放在了<code>StringTable</code>上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str1 = &quot;图解Java&quot;;</span><br><span class="line">String str2 = new String(&quot;图解Java&quot;);</span><br><span class="line">System.out.println(str1 == str2);</span><br></pre></td></tr></table></figure>
+<p>在这段代码中，当执行<code>String str1 = &quot;图解Java&quot;</code>时，先到常量池中查询有没有<code>&quot;图解Java&quot;</code>字符串的引用，如果没有，则会在<code>Java堆</code>上创建<code>&quot;图解Java&quot;</code>字符串，在常量池中存储字符串的地址，<code>str1</code>则指向字符串常量池的地址。</p>
+<p><code>String str2 = new String(&quot;图解Java&quot;)</code>，则会直接在Java堆中创建对象。<code>str2</code>指向堆中的地址。</p>
+<p>看到这里，屏幕面前的你有没有想到最后的结果是<code>false</code>呢。</p>
+<p>如果此时还有<code>String str3 = &quot;图解Java&quot;</code>那么<code>str1==str3</code>的结果是什么？</p>
+<p>此时<code>str3</code>发现字符串常量池中已经有了<code>&quot;图解Java&quot;</code>字符串的引用，则直接返回，不会创建新的对象。</p>
+<p>看到这里，屏幕面前的你有没有想到最后的结果是<code>true</code>呢。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/e593ef89-e3c1-483f-8111-76a86b6d1e79.png" alt=""></p>
+<p><code>JVM</code>中除了字符串常量池，8种基本数据类型中除了两种浮点类型剩余的6种基本数据类型的包装类，都使用了缓冲池技术，但是 <code>Byte</code>、<code>Short</code>、<code>Integer</code>、<code>Long</code>、<code>Character</code> 这5种整型的包装类也只是在对应值在 [-128,127] 时才会使用缓冲池，超出此范围仍然会去创建新的对象。</p>
+<h2 id="Class文件常量池、运行时常量池、字符串常量池的联系"><a href="#Class文件常量池、运行时常量池、字符串常量池的联系" class="headerlink" title="Class文件常量池、运行时常量池、字符串常量池的联系"></a>Class文件常量池、运行时常量池、字符串常量池的联系</h2><p>我们平时写好的Java代码即Java格式的文件，经过编译，会变成Class类型的文件。而Class文件有一部分是Class文件常量池，用于存储字面量和符号引用。</p>
+<p>Class文件经过类加载器加载后，之前Class文件常量池的内容会存放到方法区的运行时常量池，需要注意的是Class文件常量池的符号引用会转变直接引用存入运行时常量池。</p>
+<p>字符串常量池是<code>JVM</code>的一部分，整个<code>JVM</code>只有一份，在将Class文件常量池的字面量也会在类加载的时候进入到字符串常量池中。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>份数</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class文件常量池</td>
+<td>每个类对应一份</td>
+<td>字面量、符号引用</td>
+</tr>
+<tr>
+<td>运行时常量池</td>
+<td>每个类对应一份</td>
+<td>字面量、直接引用</td>
+</tr>
+<tr>
+<td>字符串常量池</td>
+<td>整个<code>JVM</code>仅有一份</td>
+<td>字符串</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://imgkr.cn-bj.ufileos.com/9b1e8a8b-9e77-462d-b066-34d9fd456924.png" alt=""></p>
+
+        </div>
+		
+            <ul class="post-copyright">
+            <li><strong>本文标题：</strong><a href="http://yoursite.com/2020/03/06/图解Java内存区域/">图解Java内存区域</a></li>
+            <li><strong>本文作者：</strong><a href="http://yoursite.com">Yu Meng</a></li>
+            <li><strong>本文链接：</strong><a href="http://yoursite.com/2020/03/06/图解Java内存区域/">http://yoursite.com/2020/03/06/图解Java内存区域/</a></li>
+            <li><strong>发布时间：</strong>2020-03-06</li>
+            <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+            </li>
+            </ul>
+        
+        
+		<hr style="height:1px;margin:1rem 0"/>
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <i class="fas fa-tags has-text-grey"></i>&nbsp;
+                    <a class="has-link-grey -link" href="/tags/图解/">图解</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/04/图解Java传递类型/">
+                <span class="level-item">图解Java传递类型</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'e347e685e5a40af64146',
+        clientSecret: '414da2f1813e1f8f91a13363ce80f15af7e0d1f0',
+        id: '1041b88d12b9fbfa4c91b56a3c61d46f',
+        repo: 'comment',
+        owner: 'yumengh',
+        admin: "yumengh",
+        createIssueManually: false,
+        distractionFreeMode: false
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-3-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="https://i.loli.net/2020/01/11/H51ncg7w9ihSAEM.jpg" alt="海阔天空">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        海阔天空
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Coder
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            13
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            0
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            14
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/yumengh">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget column-left is-sticky" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#Java内存区域">
+        <span class="has-mr-6">1</span>
+        <span>Java内存区域</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#程序计数器">
+        <span class="has-mr-6">1.1</span>
+        <span>程序计数器</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#虚拟机栈">
+        <span class="has-mr-6">1.1.1</span>
+        <span>虚拟机栈</span>
+        </a></li><li>
+        <a class="is-flex" href="#本地方法栈">
+        <span class="has-mr-6">1.1.2</span>
+        <span>本地方法栈</span>
+        </a></li><li>
+        <a class="is-flex" href="#Java堆">
+        <span class="has-mr-6">1.1.3</span>
+        <span>Java堆</span>
+        </a></li><li>
+        <a class="is-flex" href="#方法区">
+        <span class="has-mr-6">1.1.4</span>
+        <span>方法区</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#易混淆的概念">
+        <span class="has-mr-6">2</span>
+        <span>易混淆的概念</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Class文件常量池">
+        <span class="has-mr-6">2.1</span>
+        <span>Class文件常量池</span>
+        </a></li><li>
+        <a class="is-flex" href="#字符串常量池">
+        <span class="has-mr-6">2.2</span>
+        <span>字符串常量池</span>
+        </a></li><li>
+        <a class="is-flex" href="#Class文件常量池、运行时常量池、字符串常量池的联系">
+        <span class="has-mr-6">2.3</span>
+        <span>Class文件常量池、运行时常量池、字符串常量池的联系</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    海阔天空
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Yu Meng&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+				|  本站总访问量<span id="busuanzi_value_site_pv">span>次
+				span>
+				<span id="busuanzi_container_site_uv" class="theme-info">
+				|  本站访客数<span id="busuanzi_value_site_uv">span>人次
+				span>
+				<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">script>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://yoursite.com',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"right","width":225,"height":450},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
