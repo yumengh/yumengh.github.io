@@ -7,23 +7,23 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>ZooKeeper1-ZooKeeper介绍.md - 海阔天空的博客</title>
+<title>图解Java IO模型(一) - 海阔天空的博客</title>
 
 
-    <meta name="description" content="Zookeeper介绍1、初识ZooKeeper1.1、ZooKeeper介绍Zookeeper是Apache的顶级项目，为分布式应用提供高效且可靠的分布式协调服务。ZooKeeper是一个典型的分布式数据一致性的解决方案。基于他可以实现数据的发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理、Master选举、分布式锁和分布式队列等功能。">
-<meta name="keywords" content="ZooKeeper">
+    <meta name="description" content="对于 Java 的 IO 模型，对于大多数小伙伴都不陌生。但是想要准确的讲述这些 IO 模型之间的不同特点以及应用的范围，可能有一部分小伙伴很难讲清楚。在这篇文章中，我将尽可能清楚的讲述这些问题，希望对于坐在屏幕面前的你有一定的帮助。">
+<meta name="keywords" content="图解 IO">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ZooKeeper1-ZooKeeper介绍.md">
-<meta property="og:url" content="http://yoursite.com/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/index.html">
+<meta property="og:title" content="图解Java IO模型(一)">
+<meta property="og:url" content="http://yoursite.com/2020/03/20/图解Java-IO模型-一/index.html">
 <meta property="og:site_name" content="海阔天空的博客">
-<meta property="og:description" content="Zookeeper介绍1、初识ZooKeeper1.1、ZooKeeper介绍Zookeeper是Apache的顶级项目，为分布式应用提供高效且可靠的分布式协调服务。ZooKeeper是一个典型的分布式数据一致性的解决方案。基于他可以实现数据的发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理、Master选举、分布式锁和分布式队列等功能。">
+<meta property="og:description" content="对于 Java 的 IO 模型，对于大多数小伙伴都不陌生。但是想要准确的讲述这些 IO 模型之间的不同特点以及应用的范围，可能有一部分小伙伴很难讲清楚。在这篇文章中，我将尽可能清楚的讲述这些问题，希望对于坐在屏幕面前的你有一定的帮助。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg">
-<meta property="og:updated_time" content="2020-01-11T16:38:12.179Z">
+<meta property="og:image" content="https://i.loli.net/2020/03/20/sUGlVHuiaZFqwYP.jpg">
+<meta property="og:updated_time" content="2020-03-19T16:25:09.870Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ZooKeeper1-ZooKeeper介绍.md">
-<meta name="twitter:description" content="Zookeeper介绍1、初识ZooKeeper1.1、ZooKeeper介绍Zookeeper是Apache的顶级项目，为分布式应用提供高效且可靠的分布式协调服务。ZooKeeper是一个典型的分布式数据一致性的解决方案。基于他可以实现数据的发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理、Master选举、分布式锁和分布式队列等功能。">
-<meta name="twitter:image" content="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg">
+<meta name="twitter:title" content="图解Java IO模型(一)">
+<meta name="twitter:description" content="对于 Java 的 IO 模型，对于大多数小伙伴都不陌生。但是想要准确的讲述这些 IO 模型之间的不同特点以及应用的范围，可能有一部分小伙伴很难讲清楚。在这篇文章中，我将尽可能清楚的讲述这些问题，希望对于坐在屏幕面前的你有一定的帮助。">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/20/sUGlVHuiaZFqwYP.jpg">
 
 
 
@@ -131,7 +131,7 @@
     
     <div class="card-image">
         <span  class="image is-7by1">
-            <img class="thumbnail" src="https://i.loli.net/2020/01/12/kQNEZjR6Lzh5GdD.jpg" alt="ZooKeeper1-ZooKeeper介绍.md">
+            <img class="thumbnail" src="https://i.loli.net/2020/03/20/sUGlVHuiaZFqwYP.jpg" alt="图解Java IO模型(一)">
         </span>
     </div>
     
@@ -139,13 +139,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-12-19T11:57:43.000Z">2019-12-19</time>
+                <time class="level-item has-text-grey" datetime="2020-03-19T16:17:01.000Z">2020-03-20</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1084 个字)
+                    15 分钟 读完 (大约 2189 个字)
                 </span>
                 
                 
@@ -159,72 +159,91 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                ZooKeeper1-ZooKeeper介绍.md
+                图解Java IO模型(一)
             
         </h1>
         <div class="content">
-            <h2 id="Zookeeper介绍"><a href="#Zookeeper介绍" class="headerlink" title="Zookeeper介绍"></a>Zookeeper介绍</h2><h3 id="1、初识ZooKeeper"><a href="#1、初识ZooKeeper" class="headerlink" title="1、初识ZooKeeper"></a>1、初识ZooKeeper</h3><h4 id="1-1、ZooKeeper介绍"><a href="#1-1、ZooKeeper介绍" class="headerlink" title="1.1、ZooKeeper介绍"></a>1.1、ZooKeeper介绍</h4><p>Zookeeper是Apache的顶级项目，为分布式应用提供高效且可靠的分布式协调服务。ZooKeeper是一个典型的分布式数据一致性的解决方案。基于他可以实现数据的发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理、Master选举、分布式锁和分布式队列等功能。</p>
-<a id="more"></a> 
-<p>ZooKeeper的分布一致性特征如下。</p>
-<ul>
-<li><p>顺序一致性</p>
-<p>  同一客户端发起的事务请求，会按照发起顺序在ZooKeeper执行。</p>
-</li>
-<li><p>原子性</p>
-<p>  事务请求处理的结果在所有集群上都是相同的。</p>
-</li>
-<li><p>单一视图</p>
-<p>  无论客户端连接的是哪个ZooKeeper服务器，其数据模型一致。</p>
-</li>
-<li><p>可靠性</p>
-<p>  服务端成功执行一个事务，则该事务引起的服务端状态将会保留。</p>
-</li>
-<li><p>实时性</p>
-<p>  ZooKeeper仅仅保证在<strong>一段时间</strong>内，客户端可以从服务器读取到<strong>最新数据</strong>。</p>
-</li>
-</ul>
-<h4 id="1-2、为什么选择ZooKeeper"><a href="#1-2、为什么选择ZooKeeper" class="headerlink" title="1.2、为什么选择ZooKeeper"></a>1.2、为什么选择ZooKeeper</h4><ol>
-<li><p>ZooKeeper在性能、易用性、稳定性方面均达到到了工业级标准。</p>
-</li>
-<li><p>ZooKeeper是开源的。</p>
-</li>
-<li><p>ZooKeeper是免费的。</p>
-</li>
-<li><p>ZooKeeoer得到广泛的应用。</p>
-<p> Hadoop、HBase、Storm、Dubbo等软件均使用ZooKeeper作为核心组件，用于分布式协调。</p>
-</li>
-</ol>
-<h3 id="2、安装ZooKeeper"><a href="#2、安装ZooKeeper" class="headerlink" title="2、安装ZooKeeper"></a>2、安装ZooKeeper</h3><h4 id="2-1、开发环境介绍"><a href="#2-1、开发环境介绍" class="headerlink" title="2.1、开发环境介绍"></a>2.1、开发环境介绍</h4><p>楼主使用VMware安装的虚拟机，虚拟机系统是CentOS 7的系统。在虚拟机中安装的Docker，所以使用Docker安装ZooKeeper镜像。</p>
-<h4 id="2-2、单机部署"><a href="#2-2、单机部署" class="headerlink" title="2.2、单机部署"></a>2.2、单机部署</h4><p>2.2.1、ZooKeeper的配置文件zoo.cfg。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># The number of milliseconds of each tick</span><br><span class="line">tickTime=2000</span><br><span class="line"># The number of ticks that the initial</span><br><span class="line"># synchronization phase can take</span><br><span class="line">initLimit=10</span><br><span class="line"># The number of ticks that can pass between</span><br><span class="line"># sending a request and getting an acknowledgement</span><br><span class="line">syncLimit=5</span><br><span class="line"># the directory where the snapshot is stored.</span><br><span class="line"># do not use /tmp for storage, /tmp here is just</span><br><span class="line"># example sakes.</span><br><span class="line">dataDir=/data</span><br><span class="line">dataLogDir=/datalog</span><br><span class="line"># the port at which the clients will connect</span><br><span class="line">clientPort=2181</span><br><span class="line"># the maximum number of client connections.</span><br><span class="line"># increase this if you need to handle more clients</span><br><span class="line">#maxClientCnxns=60</span><br><span class="line">#</span><br><span class="line"># Be sure to read the maintenance section of the</span><br><span class="line"># administrator guide before turning on autopurge.</span><br><span class="line">#</span><br><span class="line"># http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance</span><br><span class="line">#</span><br><span class="line"># The number of snapshots to retain in dataDir</span><br><span class="line">#autopurge.snapRetainCount=3</span><br><span class="line"># Purge task interval in hours</span><br><span class="line"># Set to &quot;0&quot; to disable auto purge feature</span><br><span class="line">#autopurge.purgeInterval=1</span><br><span class="line"></span><br><span class="line">server.1=192.168.56.101:2881:3881</span><br></pre></td></tr></table></figure>
-<p>配置文件的配置选项含义：</p>
-<ul>
-<li><strong>tickTime</strong>：配置Zookeeper中最小事件单元的长度，很多运行时的时间间隔都是使用tickTime的倍数来表示的。例如，Zookeeper中会话的最小超时时间默认是2*tickTime。</li>
-<li><strong>initLimit</strong> ：该参数用于配置Leader服务器等待Follower启动，并完成数据同步的时间，默认值10，表示该时间是参数tickTime值的10倍。</li>
-<li><strong>syncLimit：</strong> 用于配置Leader服务器和Follower之间进行心跳检测的最大延时时间。</li>
-<li><strong>dataDir</strong>： Zookeeper服务器存储快照文件的目录。 </li>
-<li><strong>dataLogDir</strong>： dataLogDir用于配置Zookeeper服务器存储事务日志文件的目录。 </li>
-<li><strong>clientPort</strong>： clientPort用于配置当前服务器对外的服务器端口，客户端会通过该端口和Zookeeper服务器创建连接，一般设置为2181。每台Zookeeper服务器都可以配置任意可用的端口，同时，集群中的所有服务器不需要保持clientPort端口一致。 </li>
-<li><strong>server.id=host:port2:port3</strong>：id被称为ServerID，用来标识该机器在集群中的机器序号。第一个port表示 端口2用于选举leader，端口3用于集群内通讯使用(Leader会监听此端口)  ,Zookeeper实例数应为大于等于3的奇数，如3、5、7…不宜太多。 </li>
-</ul>
-<p>2.2.2、通过Docker启动ZooKeeper</p>
-<ol>
-<li><p>建立映射文件</p>
-<p> 在虚拟机的路径下分别建立三个文件夹，conf、data、datalog文件夹，将设置好的zoo.cfg文件放入conf中，另外的两个文件夹保存ZooKeeper生成的快照文件和日志文件。</p>
-</li>
-<li><p>拉取文件，启动ZooKeeper。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run --name zk1 --restart always \</span><br><span class="line">-v /mydata/zookeeper/zk1/data:/data \</span><br><span class="line">-v /mydata/zookeeper/zk1/datalog:/datalog \</span><br><span class="line">-v /mydata/zookeeper/zk1/conf/zoo.cfg:/conf/zoo.cfg \</span><br><span class="line">-p 2181:2181 \</span><br><span class="line">-p 2881:2881 \</span><br><span class="line">-p 3881:3881 \</span><br><span class="line">-d zookeeper</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="2-3、集群部署"><a href="#2-3、集群部署" class="headerlink" title="2.3、集群部署"></a>2.3、集群部署</h4><p>集群的部署和单机部署类似，不过需要在zoo.cfg文件的<strong>server.id=host:port2:port3</strong>配置其他的ZooKeeper应用的配置。</p>
+            <p>对于 Java 的 IO 模型，对于大多数小伙伴都不陌生。但是想要准确的讲述这些 IO 模型之间的不同特点以及应用的范围，可能有一部分小伙伴很难讲清楚。在这篇文章中，我将尽可能清楚的讲述这些问题，希望对于坐在屏幕面前的你有一定的帮助。</p>
+<a id="more"></a>
+<p>在这篇文章中，我会先叙述 Linux 的 IO 模型，因为对于一些基本概念同步、异步、阻塞、非阻塞 Linux 和 Java 都是一致的，而且 Linux 的模型和 Java 的 IO 模型有相似的地方，或者说 Java 的 IO 模型有参考 Linux 的 IO 模型的地方。</p>
+<h1 id="Linux-IO-模型"><a href="#Linux-IO-模型" class="headerlink" title="Linux IO 模型"></a>Linux IO 模型</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a><strong>概念</strong></h2><blockquote>
+<p><strong>内核态</strong>：核心态代码拥有完全的底层资源控制权限，可以执行任何 CPU 指令，访问任何内存地址，其占有的处理机是不允许被抢占的。</p>
+<p><strong>用户态</strong>：是用户程序能够使用的指令，不能直接访问底层硬件和内存地址。用户态运行的程序必须委托系统调用来访问硬件和内存。</p>
+</blockquote>
+<p>内核态会涉及到一些比较底层或者比较危险的指令。如果对于用户开放的话，会造成比较危险的状况，所以用户不能直接调用这些指令。用户需要借助系统调用才能执行一些相关的操作。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/c024cc13-a0ff-4105-abdd-52bfd7df16a7.png" alt="img"></p>
+<blockquote>
+<p><strong>同步/异步关注的是消息通信机制</strong> 。</p>
+<p>同步：就是在发出一个调用时，在没有得到结果之前， 该调用就不返回。 异步：调用在发出之后，这个调用就直接返回了，所以没有返回结果。</p>
+<p><strong>阻塞/非阻塞关注的是程序在等待调用结果（消息，返回值）时的状态</strong>。</p>
+<p>阻塞：指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。 非阻塞：指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
+</blockquote>
+<p>举个简单的例子。</p>
+<p>淘宝双 11 活动，小图同学买了一本《图解 Java》的书，此时快递小哥正在派送快递的情景。</p>
+<p><strong>同步、异步</strong></p>
+<p>小图（线程/进程 A）给快递小哥（线程/进程 B）打电话（发起调用），询问送到家的时间（结果）。如果此时快递小哥说，5 分钟或者马上送到（结果）。小图（线程/进程 A）挂了电话（调用结束）。此时就是小图（线程/进程 A）和快递小哥（线程/进程 B）就是异步调用。</p>
+<p>小图（线程/进程 A）给快递小哥（线程/进程 B）打电话（发起调用），询问送到家的时间（结果）。如果此时快递小哥说，我也不知道还要多久，我得先把手中的这几件快递先送完（不是结果）。小图（线程/进程 A）没挂电话（仍然调用）。过了一会，快递小哥送完那几件快递告诉小图，5 分钟后送到（结果）。此时就是小图（线程/进程 A）和快递小哥（线程/进程 B）就是同步调用。</p>
+<blockquote>
+<p>同步、异步一般发生在不同的线程/进程之间。如果调用者发起调用，能马上获得调用结果，这就是异步调用。如果不能马上获得结果，需要等待被调用的线程/进程一段时间，才能获得结果，这就是同步调用。</p>
+</blockquote>
+<p><strong>阻塞、非阻塞</strong></p>
+<p>小图（线程/进程 A）给快递小哥（线程/进程 B）打电话（发起调用），但是快递小哥的电话在通话中。小图就一直等待快递小哥，也没挂电话。此时小图（线程/进程 A）处于阻塞状态。</p>
+<p>小图（线程/进程 A）给快递小哥（线程/进程 B）打电话（发起调用），但是快递小哥的电话在通话中。小图听到快递小哥的电话在通话中，就挂断电话。之后看起了《图解 Java》公众号的文章（别的任务）。一会后，又给快递小哥打电话 …… 。此时小图（线程/进程 A）处于非阻塞状态。</p>
+<blockquote>
+<p>阻塞、非阻塞一般发生在单个进程/线程中。当进程/线程想要进行 A 操作，但是不能立刻完成（需要其他的条件 C）。如果线程/进程一直等待，不执行其他的操作，即此时处于阻塞状态。如果该线程/进程又开始执行另外的操作 B，此时线程处于非阻塞状态。</p>
+</blockquote>
+<p><img src="https://imgkr.cn-bj.ufileos.com/8cbeb3b4-3b3d-4c21-8237-956423f56cb6.png" alt="img"></p>
+<h2 id="Linux-IO-模型-1"><a href="#Linux-IO-模型-1" class="headerlink" title="Linux IO 模型"></a><strong>Linux IO 模型</strong></h2><p>根据前面描述的内核态和用户态的相关概念。当应用程序发起文件调用的时候，用户态运行的程序必须委托系统调用来访问硬件和内存。这个过程主要分为两个阶段，<code>等待数据</code>和<code>将数据从内核拷贝到用户空间</code>。根据这两个阶段中，调用进程和内核进程的表现，分为五种模型。</p>
+<p><strong>阻塞 IO 模型</strong>：</p>
+<p>调用进程会一直阻塞，直到数据拷贝完成 。即应用程序调用一个 IO 函数，导致应用程序阻塞，等待数据准备好。数据准备好后，从内核拷贝到用户空间，IO 函数返回成功指示。 在整个调用过程中都是阻塞的。</p>
+<p><strong>非阻塞 IO 模型</strong>：</p>
+<p>调用进程在等待数据的过程中，会不断轮询数据有没有准备好。数据准备好后，从内核拷贝到用户空间，IO 函数返回成功指示。在等待数据的过程中是非阻塞的；将数据从内核拷贝到用户空间是阻塞的。</p>
+<p><strong>IO 复用模型</strong>：</p>
+<p>在非阻塞 IO 模型中，需要调用线程不断去轮询，检查数据有没有准备好，在这个过程中消耗了 CPU 大量的时间。如果有其他的线程帮助去检查多个线程数据的完成状态，这样会提高效率。</p>
+<p>Linux 提供了<code>select</code>、<code>poll</code>和<code>epoll</code>帮助我们。一个线程可以对多个 IO 端口进行监听，当 socket 有读写事件时分发到具体的线程进行处理。</p>
+<p><strong>select、poll、epoll 区别总结</strong>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">支持一个进程打开连接数</th>
+<th style="text-align:center">IO 效率</th>
+<th style="text-align:center">消息传递方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">select</td>
+<td style="text-align:center">32 位机器 1024 个，64 位 2048 个</td>
+<td style="text-align:center">IO 效率低</td>
+<td style="text-align:center">内核需要将消息传递到用户空间，都需要内核拷贝动作</td>
+</tr>
+<tr>
+<td style="text-align:center">poll</td>
+<td style="text-align:center">无限制，原因基于链表存储</td>
+<td style="text-align:center">IO 效率低</td>
+<td style="text-align:center">内核需要将消息传递到用户空间，都需要内核拷贝动作</td>
+</tr>
+<tr>
+<td style="text-align:center">epoll</td>
+<td style="text-align:center">有上限，但很大，2G 内存 20W 左右</td>
+<td style="text-align:center">只有活跃的 socket 才调用 callback，IO 效率高</td>
+<td style="text-align:center">通过内核与用户空间共享一块内存来实现</td>
+</tr>
+</tbody>
+</table>
+<p><strong>信号驱动式 I/O</strong>：</p>
+<p>首先我们允许 Socket 进行信号驱动 IO,并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个<code>SIGIO</code>信号，可以在信号处理函数中调用 I/O 操作函数处理数据。</p>
+<p><strong>异步 IO 模型</strong>：</p>
+<p>相对于同步 IO，异步 IO 不是顺序执行。用户进程进行<code>aio_read</code>系统调用之后，无论内核数据是否准备好，都会直接返回给用户进程，然后用户态进程可以去做别的事情。等到 socket 数据准备好了，内核直接复制数据给进程，然后从内核向进程发送通知。IO 两个阶段，进程都是非阻塞的。</p>
 
         </div>
 		
             <ul class="post-copyright">
-            <li><strong>本文标题：</strong><a href="http://yoursite.com/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/">ZooKeeper1-ZooKeeper介绍.md</a></li>
+            <li><strong>本文标题：</strong><a href="http://yoursite.com/2020/03/20/图解Java-IO模型-一/">图解Java IO模型(一)</a></li>
             <li><strong>本文作者：</strong><a href="http://yoursite.com">Yu Meng</a></li>
-            <li><strong>本文链接：</strong><a href="http://yoursite.com/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/">http://yoursite.com/2019/12/19/ZooKeeper1-ZooKeeper介绍-md/</a></li>
-            <li><strong>发布时间：</strong>2019-12-19</li>
+            <li><strong>本文链接：</strong><a href="http://yoursite.com/2020/03/20/图解Java-IO模型-一/">http://yoursite.com/2020/03/20/图解Java-IO模型-一/</a></li>
+            <li><strong>发布时间：</strong>2020-03-20</li>
             <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
             </li>
             </ul>
@@ -235,7 +254,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <i class="fas fa-tags has-text-grey"></i>&nbsp;
-                    <a class="has-link-grey -link" href="/tags/ZooKeeper/">ZooKeeper</a>
+                    <a class="has-link-grey -link" href="/tags/图解-IO/">图解 IO</a>
                 </div>
             </div>
         </div>
@@ -286,17 +305,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/20/RocketMQ介绍-md/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">RocketMQ介绍.md</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/07/20/Java基础2-final关键字/">
-                <span class="level-item">Java基础2 final关键字</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/18/Typora-PicGo实现自己的图片自动上传教程/">
+                <span class="level-item">Typora+PicGo实现自己的图片自动上传教程</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -317,7 +329,7 @@
     var gitalk = new Gitalk({
         clientID: 'e347e685e5a40af64146',
         clientSecret: '414da2f1813e1f8f91a13363ce80f15af7e0d1f0',
-        id: 'dc49bc38bfccf3e6d31a5c601fa0ff33',
+        id: '80db13b079ea794f34d2814aee04306b',
         repo: 'comment',
         owner: 'yumengh',
         admin: "yumengh",
@@ -435,38 +447,18 @@
                     目录
                 </h3>
                 <ul class="menu-list"><li>
-        <a class="is-flex" href="#Zookeeper介绍">
+        <a class="is-flex" href="#Linux-IO-模型">
         <span class="has-mr-6">1</span>
-        <span>Zookeeper介绍</span>
+        <span>Linux IO 模型</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#1、初识ZooKeeper">
+        <a class="is-flex" href="#概念">
         <span class="has-mr-6">1.1</span>
-        <span>1、初识ZooKeeper</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#1-1、ZooKeeper介绍">
-        <span class="has-mr-6">1.1.1</span>
-        <span>1.1、ZooKeeper介绍</span>
+        <span>概念</span>
         </a></li><li>
-        <a class="is-flex" href="#1-2、为什么选择ZooKeeper">
-        <span class="has-mr-6">1.1.2</span>
-        <span>1.2、为什么选择ZooKeeper</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#2、安装ZooKeeper">
+        <a class="is-flex" href="#Linux-IO-模型-1">
         <span class="has-mr-6">1.2</span>
-        <span>2、安装ZooKeeper</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#2-1、开发环境介绍">
-        <span class="has-mr-6">1.2.1</span>
-        <span>2.1、开发环境介绍</span>
-        </a></li><li>
-        <a class="is-flex" href="#2-2、单机部署">
-        <span class="has-mr-6">1.2.2</span>
-        <span>2.2、单机部署</span>
-        </a></li><li>
-        <a class="is-flex" href="#2-3、集群部署">
-        <span class="has-mr-6">1.2.3</span>
-        <span>2.3、集群部署</span>
-        </a></li></ul></li></ul></li></ul>
+        <span>Linux IO 模型</span>
+        </a></li></ul></li></ul>
             </div>
         </div>
     </div>
