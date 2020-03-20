@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.8.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>图解Java IO模型(二) - 海阔天空的博客</title>
+
+
+    <meta name="description" content="在上一篇的文章中，图解Java IO模型(一)，我们讲述了关于同步、异步、阻塞、非阻塞的相关概念，Linux的IO模型。在这片文章中，我将讲述Java的IO模型即BIO、NIO、AIO等相关概念，以及尽可能说明白他们的联系。">
+<meta name="keywords" content="图解,IO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图解Java IO模型(二)">
+<meta property="og:url" content="http://yoursite.com/2020/03/20/图解Java-IO模型-二/index.html">
+<meta property="og:site_name" content="海阔天空的博客">
+<meta property="og:description" content="在上一篇的文章中，图解Java IO模型(一)，我们讲述了关于同步、异步、阻塞、非阻塞的相关概念，Linux的IO模型。在这片文章中，我将讲述Java的IO模型即BIO、NIO、AIO等相关概念，以及尽可能说明白他们的联系。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2020/03/20/Zvs1emMgT6zoCLf.png">
+<meta property="og:updated_time" content="2020-03-20T13:10:48.716Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图解Java IO模型(二)">
+<meta name="twitter:description" content="在上一篇的文章中，图解Java IO模型(一)，我们讲述了关于同步、异步、阻塞、非阻塞的相关概念，Linux的IO模型。在这片文章中，我将讲述Java的IO模型即BIO、NIO、AIO等相关概念，以及尽可能说明白他们的联系。">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/20/Zvs1emMgT6zoCLf.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                海阔天空
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-9-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/03/20/Zvs1emMgT6zoCLf.png" alt="图解Java IO模型(二)">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-20T13:03:10.000Z">2020-03-20</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    20 分钟 读完 (大约 3009 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                图解Java IO模型(二)
+            
+        </h1>
+        <div class="content">
+            <p>在上一篇的文章中，<a href="https://mp.weixin.qq.com/s/t6IMpESK9Ag8tvzq9R_gVA">图解Java IO模型(一)</a>，我们讲述了关于同步、异步、阻塞、非阻塞的相关概念，Linux的IO模型。在这片文章中，我将讲述Java的IO模型即BIO、NIO、AIO等相关概念，以及尽可能说明白他们的联系。<br><a id="more"></a></p>
+<p>Java的IO模型套用了Linux的IO模型。</p>
+<blockquote>
+<p>因为Linux是操作系统，IO是操作系统完成的。Java属于高级层面，使用了操作系统的IO模型。</p>
+</blockquote>
+<p>这里借用了群里小伙伴的解释，我觉得很有道理，如果小伙伴们有更好的解释的话，欢迎留言。</p>
+<h1 id="BIO模型"><a href="#BIO模型" class="headerlink" title="BIO模型"></a>BIO模型</h1><p>BIO（Blocking I/O）同步阻塞I/O</p>
+<blockquote>
+<p>在BIO模型下，一个线程在发起IO的请求后会阻塞，直到其他线程把该线程需要的资源准备好(这个过程中，线程一直是阻塞状态)，该线程才会执行剩余的操作。</p>
+</blockquote>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p><strong>BIO的服务端通信模型</strong>：采用BIO通信模型的服务端，通常由一个独立的Acceptor线程负责监听客户端的连接，它接收到客户端连接请求之后为每个客户端创建一个新的线程进行处理。处理完成后，通过输出流返回应答给客户端，处理的线程销毁。即典型的一请求一应答通讯模型。</p>
+<p><img src="https://i.loli.net/2020/03/20/92KMNTYmynBszuE.png" alt=""></p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p><strong>BIO客户端代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BIOClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Socket socket = <span class="keyword">new</span> Socket(<span class="string">"127.0.0.1"</span>, <span class="number">8090</span>);</span><br><span class="line">                    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            socket.getOutputStream().write((<span class="keyword">new</span> Date() + <span class="string">": hello world"</span>).getBytes());</span><br><span class="line">                            socket.getOutputStream().flush();</span><br><span class="line">                            Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>BIO服务器端代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BIOServer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        ServerSocket serverSocket = <span class="keyword">new</span> ServerSocket(<span class="number">8090</span>);</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">//accept()阻塞,直到获取到连接</span></span><br><span class="line">                    Socket socket = serverSocket.accept();</span><br><span class="line">                    <span class="comment">//创建新线程，执行相关逻辑</span></span><br><span class="line">                    <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">                        <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            InputStream inputStream = socket.getInputStream();</span><br><span class="line">                            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                                <span class="keyword">int</span> len;</span><br><span class="line">                                <span class="keyword">while</span> ((len = inputStream.read(bytes)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                                    System.out.println(<span class="keyword">new</span> String(bytes, <span class="number">0</span>, len));</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                            e.printStackTrace();</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                    &#125;).start();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>服务器实现模式为<strong>一个连接一个线程</strong>，即客户端有连接请求时服务器端就需要启动一个线程进行处理，如果这个连接不做任何事情会造成不必要的线程开销，当然可以通过线程池机制改善。</p>
+<p><strong>使用场景</strong></p>
+<p>BIO方式适用于<strong>连接数目比较小且固定</strong>的架构，这种方式对服务器资源要求比较高，并发局限于应用中，JDK1.4以前的唯一选择，但程序<strong>直观简单易理解</strong>。</p>
+<h1 id="伪异步IO模型"><a href="#伪异步IO模型" class="headerlink" title="伪异步IO模型"></a>伪异步IO模型</h1><p>伪异步IO模型是对BIO模型的改进，针对客户端的每次连接，服务器端都需要创建一个线程执行相关逻辑，执行完毕后会，创建的线程会被销毁，而线程的创建占用系统资源比较大的问题。使用线程池，解决线程频繁创建的问题。</p>
+<h2 id="模型-1"><a href="#模型-1" class="headerlink" title="模型"></a>模型</h2><p>伪异步IO模型是对BIO模型的改进，在Acceptor线程负责监听客户端的连接，会将该连接任务，放入线程池中执行。</p>
+<p><img src="https://i.loli.net/2020/03/19/nkTUdhW3NOXaAr8.png" alt=""></p>
+<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><p><strong>客户端代码和BIO一致</strong></p>
+<p><strong>服务器端代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BIOServer2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        ServerSocket serverSocket = <span class="keyword">new</span> ServerSocket(<span class="number">8090</span>);</span><br><span class="line">        ExecutorService executor = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//accept()阻塞,直到获取到连接</span></span><br><span class="line">                Socket socket = serverSocket.accept();</span><br><span class="line">                <span class="comment">//将任务交给线程池，执行相关逻辑</span></span><br><span class="line">                executor.submit(<span class="keyword">new</span> ThreadHandler(socket));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadHandler</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Socket socket;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ThreadHandler</span><span class="params">(Socket socket)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.socket = socket;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            InputStream inputStream = socket.getInputStream();</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="keyword">int</span> len;</span><br><span class="line">                <span class="keyword">while</span> ((len = inputStream.read(bytes)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                    System.out.println(<span class="keyword">new</span> String(bytes, <span class="number">0</span>, len));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h2><p>伪异步I/O实际上仅仅只是对之前I/O线程模型的一个简单优化，使用线程池解决了频繁创建线程的问题。它无法从根本上解决同步I/O导致的通信线程阻塞问题。</p>
+<h1 id="NIO模型"><a href="#NIO模型" class="headerlink" title="NIO模型"></a>NIO模型</h1><p>NIO是一种多路复用的I/O模型，提供了 Channel , Selector，Buffer等抽象。</p>
+<h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a><strong>Channel</strong></h3><p>Java NIO Channel类似于Stream，但有一些区别：</p>
+<ul>
+<li>Channel可以读取和写入。Stream通常是单向的（读或写）。</li>
+<li>Channel可以异步读写。</li>
+<li>Channel始终读取或写入缓冲区。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/03/19/zEUSY2PmMklgqZX.png" alt=""></p>
+<h3 id="Buffer"><a href="#Buffer" class="headerlink" title="Buffer"></a><strong>Buffer</strong></h3><p>在NIO厍中，所有数据都是用缓冲区处理的。在读取数据时，它是直接读到缓冲区中的; 在写入数据时，写入到缓冲区中。任何时候访问NIO中的数据，都是通过缓冲区进行操作。</p>
+<p>在面向流的I/O中。可以将数据直接写入或者将数据直接读到 Stream 对象中。</p>
+<p>缓冲区本质上是一个内存块。</p>
+<ul>
+<li>capacity</li>
+<li>position</li>
+<li>limit</li>
+</ul>
+<p><code>position</code>和<code>limit</code>取决于是否<code>Buffer</code> 在读或写模式。不管缓冲模式如何，<code>capacity</code>始终不变。</p>
+<p><strong>capacity</strong></p>
+<p>作为一个内存块，Buffer有一个固定的大小值，也叫“capacity”。你只能往里写capacity个byte、long，char等类型。一旦Buffer满了，需要将其清空（通过读数据或者清除数据）才能继续写数据往里写数据。</p>
+<p><strong>position</strong></p>
+<p>当你写数据到Buffer中时，position表示当前的位置。初始的position值为0。当一个byte、long等数据写到Buffer后， position会向前移动到下一个可插入数据的Buffer单元。position最大可为capacity – 1.</p>
+<p>当读取数据时，也是从某个特定位置读。当将Buffer从写模式切换到读模式，position会被重置为0。当从Buffer的position处读取数据时，position向前移动到下一个可读的位置。</p>
+<p><strong>limit</strong></p>
+<p>在写模式下，Buffer的limit表示你最多能往Buffer里写多少数据。 写模式下，limit等于Buffer的capacity。</p>
+<p>当切换Buffer到读模式时， limit表示你最多能读到多少数据。因此，当切换Buffer到读模式时，limit会被设置成写模式下的position值。换句话说，你能读到之前写入的所有数据（limit被设置成已写数据的数量，这个值在写模式下就是position）</p>
+<p><img src="C:\Users\Yumeng\Desktop\buffers-modes.png" alt=""></p>
+<h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a><strong>Selector</strong></h3><p>使用单个线程来处理多个Channel的好处是，只需要更少的线程来处理通道。事实上，可以只用一个线程处理所有的通道。</p>
+<p><img src="https://i.loli.net/2020/03/19/zWrw8bMnpBJxIck.png" alt=""></p>
+<h2 id="模型-2"><a href="#模型-2" class="headerlink" title="模型"></a>模型</h2><p>NIO由原来的阻塞读写（占用线程）变成了单线程轮询事件，找到可以进行读写的网络描述符进行读写。除了事件的轮询是阻塞的（没有可干的事情必须要阻塞），剩余的I/O操作都是纯CPU操作，没有必要开启多线程。由于线程的节约，连接数大的时候因为线程切换带来的问题也随之解决，进而为处理海量连接提供了可能。</p>
+<blockquote>
+<p>BIO的每个客户端的连接都需要使用一个单独的线程执行逻辑；</p>
+<p>NIO对于客户端的连接中有<code>可以进行读写的网络连接符</code>的连接，即监听需要读、写、连接的事件，之后才会使用单独的线程执行逻辑。</p>
+<p>举个例子，大家都有去餐馆吃饭的经历。</p>
+<p>每进去一个人(客户端连接)，餐馆都会给进来的客人配备一个服务员(处理线程)等待客人点菜。其实客人进来不一定会马上点菜，有可能等朋友来之后才点菜，但是服务员在这期间都会一直在那里等待。这样会大大浪费餐厅的服务员资源。这可以认为是BIO模型。</p>
+<p>每进去一个人(客户端连接)，餐厅专门配备一个员工(Selector)，询问客人现在点不点菜。有的客人进来不一定会马上点菜，有可能等朋友来之后才点菜。有的的客人会告诉员工，自己需要点菜。这时候才会有服务员到需要点菜的员工那里，等待客人点菜。这样服务员资源得到充分的使用。这可以认为是NIO模型。</p>
+</blockquote>
+<p>单线程处理I/O的效率确实非常高，没有线程切换，只是拼命的读、写、选择事件。但现在的服务器，一般都是多核处理器，如果能够利用多核心进行I/O，无疑对效率会有更大的提高。</p>
+<p><img src="https://i.loli.net/2020/03/20/hgmx2BqavySWuwM.png" alt=""></p>
+<h2 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NIOServer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Selector serverSelector = Selector.open();</span><br><span class="line">        Selector clientSelector = Selector.open();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 对应IO编程中服务端启动</span></span><br><span class="line">                ServerSocketChannel listenerChannel = ServerSocketChannel.open();</span><br><span class="line">                listenerChannel.socket().bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">8000</span>));</span><br><span class="line">                listenerChannel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">                listenerChannel.register(serverSelector, SelectionKey.OP_ACCEPT);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                    <span class="comment">// 监测是否有新的连接，这里的1指的是阻塞的时间为1ms</span></span><br><span class="line">                    <span class="keyword">if</span> (serverSelector.select(<span class="number">1</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        Set&lt;SelectionKey&gt; set = serverSelector.selectedKeys();</span><br><span class="line">                        Iterator&lt;SelectionKey&gt; keyIterator = set.iterator();</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">while</span> (keyIterator.hasNext()) &#123;</span><br><span class="line">                            SelectionKey key = keyIterator.next();</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">if</span> (key.isAcceptable()) &#123;</span><br><span class="line">                                <span class="keyword">try</span> &#123;</span><br><span class="line">                                    <span class="comment">// (1) 每来一个新连接，不需要创建一个线程，而是直接注册到clientSelector</span></span><br><span class="line">                                    SocketChannel clientChannel = ((ServerSocketChannel) key.channel()).accept();</span><br><span class="line">                                    clientChannel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">                                    clientChannel.register(clientSelector, SelectionKey.OP_READ);</span><br><span class="line">                                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                                    keyIterator.remove();</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException ignored) &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                    <span class="comment">// (2) 批量轮询是否有哪些连接有数据可读，这里的1指的是阻塞的时间为1ms</span></span><br><span class="line">                    <span class="keyword">if</span> (clientSelector.select(<span class="number">1</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        Set&lt;SelectionKey&gt; set = clientSelector.selectedKeys();</span><br><span class="line">                        Iterator&lt;SelectionKey&gt; keyIterator = set.iterator();</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">while</span> (keyIterator.hasNext()) &#123;</span><br><span class="line">                            SelectionKey key = keyIterator.next();</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">if</span> (key.isReadable()) &#123;</span><br><span class="line">                                <span class="keyword">try</span> &#123;</span><br><span class="line">                                    SocketChannel clientChannel = (SocketChannel) key.channel();</span><br><span class="line">                                    ByteBuffer byteBuffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">                                    <span class="comment">// (3) 读取数据以块为单位批量读取</span></span><br><span class="line">                                    clientChannel.read(byteBuffer);</span><br><span class="line">                                    byteBuffer.flip();</span><br><span class="line">                                    System.out.println(Charset.defaultCharset().newDecoder().decode(byteBuffer)</span><br><span class="line">                                            .toString());</span><br><span class="line">                                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                                    keyIterator.remove();</span><br><span class="line">                                    key.interestOps(SelectionKey.OP_READ);</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException ignored) &#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="特点-2"><a href="#特点-2" class="headerlink" title="特点"></a>特点</h2><p>服务器实现模式为<strong>一个请求一个线程</strong>，即客户端发送的连接请求都会注册到<strong>多路复用器</strong>上，<strong>多路复用器轮询</strong>到连接有I/O请求时才启动一个线程进行处理。</p>
+<p><strong>使用场景</strong></p>
+<p>NIO方式适用于<strong>连接数目多且连接比较短</strong>（轻操作）的架构，比如聊天服务器，并发局限于应用中，编程比较复杂。</p>
+<h1 id="AIO模型"><a href="#AIO模型" class="headerlink" title="AIO模型"></a>AIO模型</h1><p>关于AIO的模型、代码就不在这里表述了，因为我对于这一块也不太了解，基本上也没用过。有需要的同学可以自己去查找资料。代码可以参考<a href="https://colobu.com/2014/11/13/java-aio-introduction/">java aio 编程</a>的内容。</p>
+<p>据我了解Netty开发的新一代版本支持AIO模型，但是感觉效果不好，就又放弃了。</p>
+<h2 id="特点-3"><a href="#特点-3" class="headerlink" title="特点"></a>特点</h2><p><strong>AIO</strong>：异步非阻塞，服务器实现模式为<strong>一个有效请求一个线程</strong>，客户端的I/O请求都是由OS先完成了再通知服务器应用去启动线程进行处理。</p>
+<p><strong>使用场景</strong></p>
+<p>AIO方式使用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂，JDK7开始支持。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li><p><a href="https://www.jianshu.com/p/a4e03835921a">《跟闪电侠学Netty》开篇：Netty是什么？</a></p>
+</li>
+<li><p><a href="https://tech.meituan.com/2016/11/04/nio.html">Java NIO浅析</a></p>
+</li>
+<li><p><a href="https://github.com/Snailclimb/JavaGuide/blob/master/docs/java/BIO-NIO-AIO.md">BIO,NIO,AIO 总结</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/davindeng/article/details/104917998">BIO、NIO、AIO 有什么区别</a></p>
+</li>
+</ul>
+
+        </div>
+		
+            <ul class="post-copyright">
+            <li><strong>本文标题：</strong><a href="http://yoursite.com/2020/03/20/图解Java-IO模型-二/">图解Java IO模型(二)</a></li>
+            <li><strong>本文作者：</strong><a href="http://yoursite.com">Yu Meng</a></li>
+            <li><strong>本文链接：</strong><a href="http://yoursite.com/2020/03/20/图解Java-IO模型-二/">http://yoursite.com/2020/03/20/图解Java-IO模型-二/</a></li>
+            <li><strong>发布时间：</strong>2020-03-20</li>
+            <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+            </li>
+            </ul>
+        
+        
+		<hr style="height:1px;margin:1rem 0"/>
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <i class="fas fa-tags has-text-grey"></i>&nbsp;
+                    <a class="has-link-grey -link" href="/tags/IO/">IO</a>,&nbsp;<a class="has-link-grey -link" href="/tags/图解/">图解</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/20/图解Java-IO模型-一/">
+                <span class="level-item">图解Java IO模型(一)</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'e347e685e5a40af64146',
+        clientSecret: '414da2f1813e1f8f91a13363ce80f15af7e0d1f0',
+        id: '3932d90fbfb252a755c9d6a93a803208',
+        repo: 'comment',
+        owner: 'yumengh',
+        admin: "yumengh",
+        createIssueManually: false,
+        distractionFreeMode: false
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-3-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="https://i.loli.net/2020/01/11/H51ncg7w9ihSAEM.jpg" alt="海阔天空">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        海阔天空
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Coder
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            16
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            0
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            16
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/yumengh">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget column-left is-sticky" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#BIO模型">
+        <span class="has-mr-6">1</span>
+        <span>BIO模型</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#模型">
+        <span class="has-mr-6">1.1</span>
+        <span>模型</span>
+        </a></li><li>
+        <a class="is-flex" href="#代码">
+        <span class="has-mr-6">1.2</span>
+        <span>代码</span>
+        </a></li><li>
+        <a class="is-flex" href="#特点">
+        <span class="has-mr-6">1.3</span>
+        <span>特点</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#伪异步IO模型">
+        <span class="has-mr-6">2</span>
+        <span>伪异步IO模型</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#模型-1">
+        <span class="has-mr-6">2.1</span>
+        <span>模型</span>
+        </a></li><li>
+        <a class="is-flex" href="#代码-1">
+        <span class="has-mr-6">2.2</span>
+        <span>代码</span>
+        </a></li><li>
+        <a class="is-flex" href="#特点-1">
+        <span class="has-mr-6">2.3</span>
+        <span>特点</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#NIO模型">
+        <span class="has-mr-6">3</span>
+        <span>NIO模型</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#Channel">
+        <span class="has-mr-6">3.1.1</span>
+        <span>Channel</span>
+        </a></li><li>
+        <a class="is-flex" href="#Buffer">
+        <span class="has-mr-6">3.1.2</span>
+        <span>Buffer</span>
+        </a></li><li>
+        <a class="is-flex" href="#Selector">
+        <span class="has-mr-6">3.1.3</span>
+        <span>Selector</span>
+        </a></li></ul><li>
+        <a class="is-flex" href="#模型-2">
+        <span class="has-mr-6">3.2</span>
+        <span>模型</span>
+        </a></li><li>
+        <a class="is-flex" href="#代码-2">
+        <span class="has-mr-6">3.3</span>
+        <span>代码</span>
+        </a></li><li>
+        <a class="is-flex" href="#特点-2">
+        <span class="has-mr-6">3.4</span>
+        <span>特点</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#AIO模型">
+        <span class="has-mr-6">4</span>
+        <span>AIO模型</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#特点-3">
+        <span class="has-mr-6">4.1</span>
+        <span>特点</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#参考文献">
+        <span class="has-mr-6">5</span>
+        <span>参考文献</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    海阔天空
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Yu Meng&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+				|  本站总访问量<span id="busuanzi_value_site_pv">span>次
+				span>
+				<span id="busuanzi_container_site_uv" class="theme-info">
+				|  本站访客数<span id="busuanzi_value_site_uv">span>人次
+				span>
+				<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">script>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://yoursite.com',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"right","width":225,"height":450},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
