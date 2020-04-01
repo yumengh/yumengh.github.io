@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.8.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>String源码浅谈 - 海阔天空的博客</title>
+
+
+    <meta name="description" content="String对于我们都很熟悉，平时用的也不少，但是小伙伴们对于String的源码究竟了解多少？如果你真的了解String的源码，会避免很多坑，那我们开始吧。">
+<meta name="keywords" content="String,源码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="String源码浅谈">
+<meta property="og:url" content="http://yoursite.com/2020/04/02/String源码浅谈/index.html">
+<meta property="og:site_name" content="海阔天空的博客">
+<meta property="og:description" content="String对于我们都很熟悉，平时用的也不少，但是小伙伴们对于String的源码究竟了解多少？如果你真的了解String的源码，会避免很多坑，那我们开始吧。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/02/SCOxuXJle29fvVF.jpg">
+<meta property="og:updated_time" content="2020-04-01T16:47:14.663Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="String源码浅谈">
+<meta name="twitter:description" content="String对于我们都很熟悉，平时用的也不少，但是小伙伴们对于String的源码究竟了解多少？如果你真的了解String的源码，会避免很多坑，那我们开始吧。">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/02/SCOxuXJle29fvVF.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                海阔天空
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-9-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://i.loli.net/2020/04/02/SCOxuXJle29fvVF.jpg" alt="String源码浅谈">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-01T16:42:12.000Z">2020-04-02</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    14 分钟 读完 (大约 2075 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                String源码浅谈
+            
+        </h1>
+        <div class="content">
+            <p><code>String</code>对于我们都很熟悉，平时用的也不少，但是小伙伴们对于<code>String</code>的源码究竟了解多少？如果你真的了解<code>String</code>的源码，会避免很多坑，那我们开始吧。</p>
+<a id="more"></a>
+<p><img src="https://i.loli.net/2020/04/02/PveoLuIqYrVhsHK.png" alt=""></p>
+<h1 id="String类"><a href="#String类" class="headerlink" title="String类"></a>String类</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>, <span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;, <span class="title">CharSequence</span></span></span><br></pre></td></tr></table></figure>
+<p>从<code>String</code>类的定义中，我们可以认识到</p>
+<ul>
+<li><p><code>String</code>类被<code>final</code>修饰，表示该类不能被别的类继承。</p>
+</li>
+<li><p>String类实现了<code>java.io.Serializable</code>接口，表示<code>String</code>类可以序列化。</p>
+<blockquote>
+<p><code>Serializable</code>是一个空接口，它的实现类无需重写任何方法，只要实现了该接口，即相当于开启可序列化操作标识。</p>
+</blockquote>
+</li>
+<li><p>String类实现了<code>Comparable&lt;String&gt;</code>，字符串可以比较大小。</p>
+<blockquote>
+<p><code>String</code>类通过重写<code>Comparable</code>接口的<code>compareTo(T o)</code>方法，实现字符串比较的逻辑。</p>
+</blockquote>
+</li>
+<li><p>String类实现了 <code>CharSequence</code>接口，表示是一个字符的序列，因为<code>String</code>的本质是一个<code>char</code>类型数组。</p>
+<blockquote>
+<p><code>java.lang.CharSequence</code>接口是一个可读的字符序列。此接口为不同类型的字符序列提供了一种统一且只读的访问方式。在接口中定义的方法包括<code>charAt(int index)</code>、<code>length()</code>、<code>toString()</code>等方法。</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="字段属性"><a href="#字段属性" class="headerlink" title="字段属性"></a>字段属性</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** The value is used for character storage.*/</span></span><br><span class="line"><span class="meta">@Stable</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">byte</span>[] value;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Cache the hash code for the string */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> hash; <span class="comment">// Default to 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/** use serialVersionUID from JDK 1.0.2 for interoperability */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">6849794470754667710L</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>byte[] value</code> 数组是<code>String类</code>底层的数据结构，即<code>String</code>类是存储在<code>value</code>数组里面。</p>
+<p>  需要注意的是该数组被<code>final</code>修饰，对于<code>final</code>修饰的数组，我们可以修改该数组的对象的值，但是不能改变指向的对象即不能指向别的数组。</p>
+<p>  <strong>测试代码</strong></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">char</span>[] chars = <span class="keyword">new</span> <span class="keyword">char</span>[]&#123;<span class="string">'J'</span>,<span class="string">'a'</span>,<span class="string">'v'</span>,<span class="string">'a'</span>&#125;;</span><br><span class="line">        System.out.println(String.valueOf(chars));</span><br><span class="line">        chars[<span class="number">0</span>] = <span class="string">'j'</span>;</span><br><span class="line">        System.out.println(String.valueOf(chars));</span><br><span class="line">        <span class="comment">//chars = new char[]&#123;'G','o'&#125;;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>​    <strong>结果</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Java</span><br><span class="line">java</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>需要注意，在测试代码里面，即代码第七行，指向别的数组对象，编译直接报错。</p>
+</blockquote>
+<ul>
+<li><p><code>int hash</code>用来保存某一个<code>String</code>实例的哈希值，可以说是哈希值的一个缓存。</p>
+<p>  例如，当<code>String</code>放入<code>HashMap</code>中，作为<code>key</code>来使用。每次插入一个键值対时，不需要重新计算<code>key</code>的哈希值，直接取出<code>key</code>的缓存<code>hash</code>值即可，在一定程度上，加快了<code>HashMap</code>的效率。</p>
+</li>
+<li><p><code>long serialVersionUID</code> 用于保证版本一致性。</p>
+<p>  String实现了<code>Serializable</code>接口，因此需要拥有一个序列化的ID。序列化时，将此ID与对象一并写入到文件中，反序列化时，检测该类中的ID与文件中的ID是否一致，一致的话，说明版本一致，序列化成功。</p>
+</li>
+</ul>
+<blockquote>
+<p>需要注意，当实现<code>Serializable</code>接口，如果不声明<code>long serialVersionUID</code>的值，也可以进行序列化和反序列化。因为Java会帮助我们自动生成一个<code>long serialVersionUID</code>的值。</p>
+<p>但是需要注意的是，如果我们修改实现<code>Serializable</code>接口的类时，Java自动生成的<code>long serialVersionUID</code>的值也会发生改变。如果我们需要保证程序向前兼容，此时会报错，因为该值发生了改变。即我们本地序列化的<code>serialVersionUID</code>的值和我们类里的<code>serialVersionUID</code>的值不一致，无法序列化，报错。如果我们自己声明该值，并且保证该值不变，相同情况下，可以顺利序列化，保证程序的向前兼容性。</p>
+<p>想要深入了解，可以参考文献的第一篇文章。</p>
+</blockquote>
+<h1 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h1><ul>
+<li>无参构造方法</li>
+</ul>
+<blockquote>
+<p>创建空的字符串，因为<code>String</code>是不可变的，所以该构造方法使用较少。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Initializes a newly created &#123;<span class="doctag">@code</span> String&#125; object so that it represents</span></span><br><span class="line"><span class="comment">     * an empty character sequence.  Note that use of this constructor is</span></span><br><span class="line"><span class="comment">     * unnecessary since Strings are immutable.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.value = <span class="string">""</span>.value;</span><br><span class="line">        <span class="keyword">this</span>.coder = <span class="string">""</span>.coder;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>接收<code>String</code>类型参数的构造函数</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">(String original)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.value = original.value;</span><br><span class="line">       <span class="keyword">this</span>.hash = original.hash;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>接收<code>char[] 数组</code>类型参数的构造函数</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">(<span class="keyword">char</span> value[])</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.value = Arrays.copyOf(value, value.length);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">char</span>[] copyOf(<span class="keyword">char</span>[] original, <span class="keyword">int</span> newLength) &#123;</span><br><span class="line">        <span class="keyword">char</span>[] copy = <span class="keyword">new</span> <span class="keyword">char</span>[newLength];</span><br><span class="line">        System.arraycopy(original, <span class="number">0</span>, copy, <span class="number">0</span>,</span><br><span class="line">                         Math.min(original.length, newLength));</span><br><span class="line">        <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据代码块我们可以发现构造函数调用了<code>Array</code>的<code>copyof</code>方法，而<code>copyof</code>方法基于<code>System.arraycopy</code>方法。<code>System.arraycopy</code>方法是<code>native</code>方法，由<code>JVM</code>调用<code>非Java方法</code>实现。</p>
+<ul>
+<li>通过解码指定字节数组，生成字符串。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">(<span class="keyword">byte</span> bytes[], <span class="keyword">int</span> offset, <span class="keyword">int</span> length, String charsetName)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> UnsupportedEncodingException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (charsetName == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"charsetName"</span>);</span><br><span class="line">        checkBounds(bytes, offset, length);</span><br><span class="line">        <span class="keyword">this</span>.value = StringCoding.decode(charsetName, bytes, offset, length);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h1><ul>
+<li>字符串本身的属性</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">length</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value.length;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>String</code>底层实现方式是<code>value</code>数组，即数组的长度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value.length == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>String</code>底层实现方式是<code>value</code>数组，字符串为空，即数组的长度为零。</p>
+<ul>
+<li>字符串之间的比较</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</span><br><span class="line"> 		<span class="comment">//同一个对象，直接返回</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">            String anotherString = (String)anObject;</span><br><span class="line">            <span class="keyword">int</span> n = value.length;</span><br><span class="line">            <span class="keyword">if</span> (n == anotherString.value.length) &#123;</span><br><span class="line">                <span class="keyword">char</span> v1[] = value;</span><br><span class="line">                <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line">                <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>String</code>重写了<code>Object</code>类的<code>equals</code>方法，如果是同一个对象直接返回。否则逐一比较两个字符串的每个<code>char</code>元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(String anotherString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = value.length;</span><br><span class="line">        <span class="keyword">int</span> len2 = anotherString.value.length;</span><br><span class="line">        <span class="keyword">int</span> lim = Math.min(len1, len2);</span><br><span class="line">        <span class="keyword">char</span> v1[] = value;</span><br><span class="line">        <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt; lim) &#123;</span><br><span class="line">            <span class="keyword">char</span> c1 = v1[k];</span><br><span class="line">            <span class="keyword">char</span> c2 = v2[k];</span><br><span class="line">            <span class="keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">                <span class="keyword">return</span> c1 - c2;</span><br><span class="line">            &#125;</span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len1 - len2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>String</code>实现了<code>Comparable</code>接口的<code>compareTo</code>方法，从起始位置开始，比较<code>char</code>元素的大小。</p>
+<ul>
+<li><p>字符串处理</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">substring</span><span class="params">(<span class="keyword">int</span> beginIndex, <span class="keyword">int</span> endIndex)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (beginIndex &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> StringIndexOutOfBoundsException(beginIndex);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (endIndex &gt; value.length) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> StringIndexOutOfBoundsException(endIndex);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> subLen = endIndex - beginIndex;</span><br><span class="line">        <span class="keyword">if</span> (subLen &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> StringIndexOutOfBoundsException(subLen);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ((beginIndex == <span class="number">0</span>) &amp;&amp; (endIndex == value.length)) ? <span class="keyword">this</span></span><br><span class="line">                : <span class="keyword">new</span> String(value, beginIndex, subLen);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  <code>String</code>的<code>substring</code>方法用于截断字符串，返回字符串的一部分。我们可以发现返回的是一个新的字符串，而不是在之前的字符串上面修改，因为之前的字符串是不可变的。</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">concat</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> otherLen = str.length();</span><br><span class="line">        <span class="keyword">if</span> (otherLen == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> len = value.length;</span><br><span class="line">        <span class="keyword">char</span> buf[] = Arrays.copyOf(value, len + otherLen);</span><br><span class="line">        str.getChars(buf, len);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(buf, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  <code>String</code>的<code>concat</code>方法用于拼接字符串，将<code>str</code>拼接到现有的字符串上，返回拼接好的字符串。</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">replace</span><span class="params">(<span class="keyword">char</span> oldChar, <span class="keyword">char</span> newChar)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (oldChar != newChar) &#123;</span><br><span class="line">            <span class="keyword">int</span> len = value.length;</span><br><span class="line">            <span class="keyword">int</span> i = -<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">char</span>[] val = value; <span class="comment">/* avoid getfield opcode */</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> (++i &lt; len) &#123;</span><br><span class="line">                <span class="keyword">if</span> (val[i] == oldChar) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (i &lt; len) &#123;</span><br><span class="line">                <span class="keyword">char</span> buf[] = <span class="keyword">new</span> <span class="keyword">char</span>[len];</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">                    buf[j] = val[j];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">while</span> (i &lt; len) &#123;</span><br><span class="line">                    <span class="keyword">char</span> c = val[i];</span><br><span class="line">                    buf[i] = (c == oldChar) ? newChar : c;</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> String(buf, <span class="keyword">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  <code>String</code>的<code>replace</code>方法用于将字符串的<code>oldChar</code>替换成<code>newChar</code>，返回新的字符串。</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> String[] split(String regex, <span class="keyword">int</span> limit) &#123;</span><br><span class="line">        <span class="comment">/* fastpath if the regex is a</span></span><br><span class="line"><span class="comment">         (1)one-char String and this character is not one of the</span></span><br><span class="line"><span class="comment">            RegEx's meta characters ".$|()[&#123;^?*+\\", or</span></span><br><span class="line"><span class="comment">         (2)two-char String and the first char is the backslash and</span></span><br><span class="line"><span class="comment">            the second is not the ascii digit or ascii letter.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">char</span> ch = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (((regex.value.length == <span class="number">1</span> &amp;&amp;</span><br><span class="line">             <span class="string">".$|()[&#123;^?*+\\"</span>.indexOf(ch = regex.charAt(<span class="number">0</span>)) == -<span class="number">1</span>) ||</span><br><span class="line">             (regex.length() == <span class="number">2</span> &amp;&amp;</span><br><span class="line">              regex.charAt(<span class="number">0</span>) == <span class="string">'\\'</span> &amp;&amp;</span><br><span class="line">              (((ch = regex.charAt(<span class="number">1</span>))-<span class="string">'0'</span>)|(<span class="string">'9'</span>-ch)) &lt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">              ((ch-<span class="string">'a'</span>)|(<span class="string">'z'</span>-ch)) &lt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">              ((ch-<span class="string">'A'</span>)|(<span class="string">'Z'</span>-ch)) &lt; <span class="number">0</span>)) &amp;&amp;</span><br><span class="line">            (ch &lt; Character.MIN_HIGH_SURROGATE ||</span><br><span class="line">             ch &gt; Character.MAX_LOW_SURROGATE))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> off = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">int</span> next = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">boolean</span> limited = limit &gt; <span class="number">0</span>;</span><br><span class="line">            ArrayList&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">while</span> ((next = indexOf(ch, off)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!limited || list.size() &lt; limit - <span class="number">1</span>) &#123;</span><br><span class="line">                    list.add(substring(off, next));</span><br><span class="line">                    off = next + <span class="number">1</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;    <span class="comment">// last one</span></span><br><span class="line">                    <span class="comment">//assert (list.size() == limit - 1);</span></span><br><span class="line">                    list.add(substring(off, value.length));</span><br><span class="line">                    off = value.length;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// If no match was found, return this</span></span><br><span class="line">            <span class="keyword">if</span> (off == <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;<span class="keyword">this</span>&#125;;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Add remaining segment</span></span><br><span class="line">            <span class="keyword">if</span> (!limited || list.size() &lt; limit)</span><br><span class="line">                list.add(substring(off, value.length));</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Construct result</span></span><br><span class="line">            <span class="keyword">int</span> resultSize = list.size();</span><br><span class="line">            <span class="keyword">if</span> (limit == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">while</span> (resultSize &gt; <span class="number">0</span> &amp;&amp; list.get(resultSize - <span class="number">1</span>).length() == <span class="number">0</span>) &#123;</span><br><span class="line">                    resultSize--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            String[] result = <span class="keyword">new</span> String[resultSize];</span><br><span class="line">            <span class="keyword">return</span> list.subList(<span class="number">0</span>, resultSize).toArray(result);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Pattern.compile(regex).split(<span class="keyword">this</span>, limit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  <code>String</code>的<code>split</code>方法用于使用字符串的<code>regex</code>分割字符串，返回新的字符串数组。源码解析可以查看参考文献2。</p>
+</li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a href="https://www.jianshu.com/p/91fa3d2ac892">Java serialVersionUID 有什么作用？</a></li>
+<li><a href="https://blog.csdn.net/gcola007/article/details/82977139">Java String.split()源码分析</a></li>
+<li><a href="https://blog.csdn.net/SnailMann/article/details/80882719">Java8的String源码分析</a></li>
+<li><a href="https://blog.csdn.net/qq_33591903/article/details/84778059">String源码浅谈</a></li>
+<li><a href="https://blog.csdn.net/ylyg050518/article/details/52352993">Java String类源码分析</a></li>
+</ol>
+
+        </div>
+		
+            <ul class="post-copyright">
+            <li><strong>本文标题：</strong><a href="http://yoursite.com/2020/04/02/String源码浅谈/">String源码浅谈</a></li>
+            <li><strong>本文作者：</strong><a href="http://yoursite.com">Yu Meng</a></li>
+            <li><strong>本文链接：</strong><a href="http://yoursite.com/2020/04/02/String源码浅谈/">http://yoursite.com/2020/04/02/String源码浅谈/</a></li>
+            <li><strong>发布时间：</strong>2020-04-02</li>
+            <li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+            </li>
+            </ul>
+        
+        
+		<hr style="height:1px;margin:1rem 0"/>
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <i class="fas fa-tags has-text-grey"></i>&nbsp;
+                    <a class="has-link-grey -link" href="/tags/String/">String</a>,&nbsp;<a class="has-link-grey -link" href="/tags/源码/">源码</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/26/MySQL数据类型/">
+                <span class="level-item">MySQL数据类型</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'e347e685e5a40af64146',
+        clientSecret: '414da2f1813e1f8f91a13363ce80f15af7e0d1f0',
+        id: '5fdef7c8dcce0bfea629b3846a5bb64d',
+        repo: 'comment',
+        owner: 'yumengh',
+        admin: "yumengh",
+        createIssueManually: false,
+        distractionFreeMode: false
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-3-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="https://i.loli.net/2020/01/11/H51ncg7w9ihSAEM.jpg" alt="海阔天空">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        海阔天空
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Coder
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            18
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            0
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            20
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/yumengh">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget column-left is-sticky" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#String类">
+        <span class="has-mr-6">1</span>
+        <span>String类</span>
+        </a></li><li>
+        <a class="is-flex" href="#字段属性">
+        <span class="has-mr-6">2</span>
+        <span>字段属性</span>
+        </a></li><li>
+        <a class="is-flex" href="#构造方法">
+        <span class="has-mr-6">3</span>
+        <span>构造方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#常用方法">
+        <span class="has-mr-6">4</span>
+        <span>常用方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考文献">
+        <span class="has-mr-6">5</span>
+        <span>参考文献</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    海阔天空
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Yu Meng&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+				|  本站总访问量<span id="busuanzi_value_site_pv">span>次
+				span>
+				<span id="busuanzi_container_site_uv" class="theme-info">
+				|  本站访客数<span id="busuanzi_value_site_uv">span>人次
+				span>
+				<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">script>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/yumengh">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://yoursite.com',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"right","width":225,"height":450},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
